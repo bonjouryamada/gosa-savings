@@ -1,11 +1,9 @@
-const CACHE_NAME = "gosa-savings-pwa-v2";
+const CACHE_NAME = "gosa-savings-pwa-v1";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./src/main.js",
-  "./src/App.js",
   "./src/main.jsx",
   "./src/App.jsx",
   "./src/styles.css",
