@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1E7F63" />
+    <title>サポート | 誤差貯金</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: rgba(255, 255, 255, 0.94);
+        --paper-soft: #edf5f1;
+        --ink: #17201c;
+        --muted: #78817b;
+        --line: rgba(23, 32, 28, 0.1);
+        --green-deep: #10634c;
+        --shadow: 0 18px 42px rgba(27, 54, 43, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background:
+          radial-gradient(circle at 12% 8%, rgba(30, 127, 99, 0.1), transparent 28rem),
+          radial-gradient(circle at 88% 14%, rgba(216, 164, 55, 0.13), transparent 24rem),
+          linear-gradient(145deg, #fbfbf3 0%, #eef6f1 48%, #f8f3e8 100%);
+        color: var(--ink);
+        font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
+        line-height: 1.8;
+      }
+
+      main {
+        width: min(100%, 760px);
+        margin: 0 auto;
+        padding: 40px 18px;
+      }
+
+      .page {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+
+      header {
+        padding: 32px 28px 24px;
+        border-bottom: 1px solid var(--line);
+        background: linear-gradient(135deg, rgba(237, 245, 241, 0.98), rgba(255, 255, 255, 0.94));
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--green-deep);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--green-deep);
+        font-size: clamp(28px, 7vw, 40px);
+        line-height: 1.25;
+      }
+
+      .lead {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      article {
+        display: grid;
+        gap: 22px;
+        padding: 28px;
+      }
+
+      section {
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      section:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
+
+      h2 {
+        margin: 0 0 10px;
+        font-size: 19px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      ul {
+        margin: 10px 0 0;
+        padding-left: 1.25em;
+      }
+
+      li + li {
+        margin-top: 6px;
+      }
+
+      a {
+        color: var(--green-deep);
+        font-weight: 800;
+      }
+
+      .contact,
+      .note {
+        border: 1px solid rgba(30, 127, 99, 0.16);
+        border-radius: 18px;
+        background: var(--paper-soft);
+        padding: 16px;
+      }
+
+      .contact {
+        display: inline-flex;
+        max-width: 100%;
+        margin-top: 10px;
+        overflow-wrap: anywhere;
+      }
+
+      footer {
+        padding: 18px 28px 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 560px) {
+        main {
+          padding: 18px 12px;
+        }
+
+        .page {
+          border-radius: 20px;
+        }
+
+        header,
+        article,
+        footer {
+          padding-right: 18px;
+          padding-left: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="page">
+        <header>
+          <p class="eyebrow">誤差貯金</p>
+          <h1>サポート</h1>
+          <p class="lead">誤差を記録して、貯金額と成長を見られるアプリのサポートページです。</p>
+        </header>
+
+        <article>
+          <section>
+            <h2>お問い合わせ</h2>
+            <p>不具合の報告、ご質問、ご要望がある場合は、次のメールアドレスまでご連絡ください。</p>
+            <p class="contact"><a href="mailto:support@example.com">support@example.com</a></p>
+          </section>
+
+          <section>
+            <h2>ホーム画面に追加する</h2>
+            <p>誤差貯金は、スマートフォンのホーム画面に追加してアプリのように使えます。</p>
+            <p><a href="./install.html">追加手順を見る</a></p>
+          </section>
+
+          <section>
+            <h2>このアプリでできること</h2>
+            <p>
+              誤差貯金は、使わなかった小さなお金を記録し、合計貯金額や成長表示を確認するためのシンプルなアプリです。
+            </p>
+          </section>
+
+          <section>
+            <h2>データの保存について</h2>
+            <p>
+              現在のMVPでは、入力した金額、日付、カテゴリ、メモなどの情報はブラウザのlocalStorageに保存されます。銀行口座連携、外部サーバーへの送信、決済、広告トラッキングは行っていません。
+            </p>
+          </section>
+
+          <section>
+            <h2>よくある確認事項</h2>
+            <ul>
+              <li>端末やブラウザを変えると、保存済みデータは自動的には引き継がれません。</li>
+              <li>ブラウザのサイトデータを削除すると、localStorageに保存された記録も削除されます。</li>
+              <li>オフラインでも主要画面を開ける場合がありますが、同じブラウザ内に保存されているためです。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>関連ページ</h2>
+            <p><a href="./privacy.html">プライバシーポリシーを見る</a></p>
+          </section>
+        </article>
+
+        <footer>最終更新日: 2026年5月6日</footer>
+      </div>
+    </main>
+  </body>
+</html>

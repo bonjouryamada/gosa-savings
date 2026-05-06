@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1E7F63" />
+    <title>プライバシーポリシー | 誤差貯金</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: rgba(255, 255, 255, 0.94);
+        --paper-soft: #edf5f1;
+        --ink: #17201c;
+        --muted: #78817b;
+        --line: rgba(23, 32, 28, 0.1);
+        --green: #1e7f63;
+        --green-deep: #10634c;
+        --gold: #d8a437;
+        --shadow: 0 18px 42px rgba(27, 54, 43, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        background:
+          radial-gradient(circle at 12% 8%, rgba(30, 127, 99, 0.1), transparent 28rem),
+          radial-gradient(circle at 88% 14%, rgba(216, 164, 55, 0.13), transparent 24rem),
+          linear-gradient(145deg, #fbfbf3 0%, #eef6f1 48%, #f8f3e8 100%);
+        color: var(--ink);
+        font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
+        line-height: 1.8;
+      }
+
+      main {
+        width: min(100%, 760px);
+        margin: 0 auto;
+        padding: 40px 18px;
+      }
+
+      .page {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+
+      header {
+        padding: 32px 28px 24px;
+        border-bottom: 1px solid var(--line);
+        background: linear-gradient(135deg, rgba(237, 245, 241, 0.98), rgba(255, 255, 255, 0.94));
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--green-deep);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      h1 {
+        margin: 0;
+        color: var(--green-deep);
+        font-size: clamp(28px, 7vw, 40px);
+        line-height: 1.25;
+      }
+
+      .lead {
+        margin: 14px 0 0;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      article {
+        display: grid;
+        gap: 22px;
+        padding: 28px;
+      }
+
+      section {
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      section:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
+
+      h2 {
+        margin: 0 0 10px;
+        font-size: 19px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      ul {
+        margin: 10px 0 0;
+        padding-left: 1.25em;
+      }
+
+      li + li {
+        margin-top: 6px;
+      }
+
+      a {
+        color: var(--green-deep);
+        font-weight: 800;
+      }
+
+      .note {
+        border: 1px solid rgba(30, 127, 99, 0.16);
+        border-radius: 18px;
+        background: var(--paper-soft);
+        padding: 16px;
+      }
+
+      footer {
+        padding: 18px 28px 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 560px) {
+        main {
+          padding: 18px 12px;
+        }
+
+        .page {
+          border-radius: 20px;
+        }
+
+        header,
+        article,
+        footer {
+          padding-right: 18px;
+          padding-left: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="page">
+        <header>
+          <p class="eyebrow">誤差貯金</p>
+          <h1>プライバシーポリシー</h1>
+          <p class="lead">このページでは、誤差貯金におけるデータの扱いについて説明します。</p>
+        </header>
+
+        <article>
+          <section>
+            <h2>アプリの目的</h2>
+            <p>
+              誤差貯金は、日々の「使わなかった小さなお金」を記録し、貯金額と成長を見られるようにするアプリです。
+            </p>
+          </section>
+
+          <section>
+            <h2>記録される情報</h2>
+            <p>現在のMVPでは、ユーザーが入力した次の情報を端末内に保存します。</p>
+            <ul>
+              <li>誤差として記録した金額</li>
+              <li>記録日</li>
+              <li>カテゴリ</li>
+              <li>任意で入力したメモ</li>
+              <li>合計貯金額や成長表示に必要な集計情報</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>保存場所</h2>
+            <p>
+              入力内容は、お使いのブラウザのlocalStorageに保存されます。現在のMVPでは、アプリの運営者が外部サーバーで取得、保管、閲覧することはありません。
+            </p>
+          </section>
+
+          <section>
+            <h2>外部送信について</h2>
+            <p>現在のMVPでは、次の処理は行いません。</p>
+            <ul>
+              <li>銀行口座やクレジットカードなどの金融機関連携</li>
+              <li>入力データの外部サーバー送信</li>
+              <li>アプリ内決済や課金処理</li>
+              <li>広告配信や広告目的のトラッキング</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>データの削除</h2>
+            <p>
+              保存されたデータは、ブラウザのサイトデータを削除することで消去できます。ブラウザや端末を変更した場合、保存済みデータは自動的には引き継がれません。
+            </p>
+          </section>
+
+          <section>
+            <h2>将来の変更について</h2>
+            <p class="note">
+              今後、同期機能、アカウント機能、外部サービス連携、決済、広告関連機能などを追加する場合は、このプライバシーポリシーを更新し、データの扱いが変わる点をわかりやすくお知らせします。
+            </p>
+          </section>
+
+          <section>
+            <h2>お問い合わせ</h2>
+            <p>
+              プライバシーポリシーに関するお問い合わせは、<a href="./support.html">サポートページ</a>をご確認ください。
+            </p>
+          </section>
+        </article>
+
+        <footer>制定日: 2026年5月3日</footer>
+      </div>
+    </main>
+  </body>
+</html>

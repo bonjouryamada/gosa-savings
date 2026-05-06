@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>誤差貯金 ストアスクリーンショット説明</title>
+    <style>
+      :root {
+        --bg: #f5f6f3;
+        --surface: #ffffff;
+        --surface-soft: #edf5f1;
+        --ink: #17201c;
+        --muted: #78817b;
+        --line: #e4e8e2;
+        --accent: #1e7f63;
+        --accent-strong: #10634c;
+        --gold: #d8a437;
+        --shadow: 0 22px 70px rgba(28, 43, 36, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 18% 8%, rgba(216, 164, 55, 0.14), transparent 28rem),
+          linear-gradient(135deg, #f8f7f1 0%, #eef4f1 48%, var(--bg) 100%);
+        color: var(--ink);
+        font-family:
+          "Noto Sans JP", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .page {
+        width: min(1180px, 100%);
+        margin: 0 auto;
+        padding: 40px 20px 56px;
+      }
+
+      .intro {
+        margin-bottom: 28px;
+      }
+
+      .intro p {
+        max-width: 720px;
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      h1,
+      h2,
+      p {
+        letter-spacing: 0;
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(28px, 5vw, 44px);
+        line-height: 1.18;
+      }
+
+      .shots {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(240px, 1fr));
+        gap: 18px;
+      }
+
+      .shot {
+        min-height: 1680px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        border: 1px solid rgba(228, 232, 226, 0.92);
+        border-radius: 28px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(237, 245, 241, 0.92)),
+          var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .copy {
+        padding: 58px 34px 22px;
+      }
+
+      .label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 22px;
+        color: var(--accent-strong);
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      .label::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--gold);
+      }
+
+      .copy h2 {
+        font-size: clamp(34px, 4.2vw, 54px);
+        line-height: 1.16;
+      }
+
+      .copy p {
+        margin: 22px 0 0;
+        color: var(--muted);
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.65;
+      }
+
+      .phone {
+        width: min(82%, 360px);
+        min-height: 820px;
+        margin: 20px auto 64px;
+        padding: 18px 16px 24px;
+        border: 10px solid #17201c;
+        border-radius: 42px;
+        background: #fafbf8;
+        box-shadow: 0 22px 48px rgba(23, 32, 28, 0.18);
+      }
+
+      .phone-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+
+      .phone-title {
+        font-size: 22px;
+        font-weight: 900;
+      }
+
+      .circle-button {
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: var(--surface);
+      }
+
+      .card {
+        border: 1px solid rgba(228, 232, 226, 0.9);
+        border-radius: 24px;
+        background: var(--surface);
+        box-shadow: 0 12px 34px rgba(28, 43, 36, 0.08);
+      }
+
+      .balance-card {
+        padding: 22px;
+        background: linear-gradient(130deg, rgba(237, 245, 241, 0.95), rgba(255, 255, 255, 0.98));
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .amount {
+        margin-top: 6px;
+        color: var(--ink);
+        font-size: 48px;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .month-pill {
+        width: max-content;
+        margin-top: 16px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--surface-soft);
+        color: var(--accent-strong);
+        font-weight: 900;
+      }
+
+      .quick-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin: 14px 0;
+      }
+
+      .quick {
+        min-height: 78px;
+        padding: 14px;
+      }
+
+      .quick b {
+        display: block;
+        margin-top: 8px;
+        color: var(--accent-strong);
+        font-size: 20px;
+      }
+
+      .history {
+        display: grid;
+        gap: 10px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 42px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+      }
+
+      .icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: var(--surface-soft);
+        color: var(--accent-strong);
+        font-weight: 900;
+      }
+
+      .row strong,
+      .yen {
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .yen {
+        color: var(--accent-strong);
+      }
+
+      .input-card {
+        padding: 20px;
+      }
+
+      .field {
+        margin-top: 16px;
+      }
+
+      .amount-input {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 78px;
+        margin-top: 8px;
+        padding: 0 18px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fbfcfa;
+      }
+
+      .amount-input span {
+        color: var(--muted);
+        font-size: 28px;
+        font-weight: 900;
+      }
+
+      .amount-input b {
+        font-size: 42px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .chip {
+        padding: 9px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--surface);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .memo {
+        min-height: 92px;
+        margin-top: 8px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .button {
+        display: grid;
+        place-items: center;
+        min-height: 56px;
+        margin-top: 18px;
+        border-radius: 18px;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 900;
+      }
+
+      .avatar-card {
+        display: grid;
+        place-items: center;
+        min-height: 330px;
+        margin-bottom: 14px;
+        padding: 26px;
+        background: linear-gradient(180deg, #ffffff, #edf5f1);
+      }
+
+      .avatar {
+        position: relative;
+        width: 132px;
+        height: 150px;
+        border-radius: 66px 66px 48px 48px;
+        background: linear-gradient(160deg, #2f9b78, #93d2a8);
+        box-shadow: inset 0 -18px 0 rgba(0, 0, 0, 0.07);
+      }
+
+      .avatar::before {
+        content: "";
+        position: absolute;
+        top: -34px;
+        left: 56px;
+        width: 34px;
+        height: 48px;
+        border-left: 6px solid var(--accent);
+        border-radius: 50%;
+      }
+
+      .avatar::after {
+        content: "";
+        position: absolute;
+        top: -35px;
+        left: 66px;
+        width: 48px;
+        height: 28px;
+        border-radius: 80% 20% 80% 20%;
+        background: #58b974;
+        transform: rotate(-18deg);
+      }
+
+      .face {
+        position: absolute;
+        top: 58px;
+        left: 34px;
+        display: flex;
+        gap: 34px;
+      }
+
+      .face span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #13241e;
+      }
+
+      .level {
+        margin-top: 18px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat {
+        padding: 16px;
+      }
+
+      .stat strong {
+        display: block;
+        margin-top: 6px;
+        font-size: 22px;
+      }
+
+      .chart-card {
+        padding: 18px;
+      }
+
+      .bars {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        align-items: end;
+        gap: 10px;
+        height: 330px;
+        margin-top: 16px;
+      }
+
+      .bar {
+        display: grid;
+        grid-template-rows: 24px 1fr 24px;
+        align-items: end;
+        gap: 8px;
+        height: 100%;
+        text-align: center;
+      }
+
+      .fill {
+        width: 100%;
+        min-height: 16px;
+        border-radius: 999px 999px 8px 8px;
+        background: linear-gradient(180deg, var(--gold), var(--accent));
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 16px;
+        padding: 8px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .nav span {
+        display: grid;
+        place-items: center;
+        min-height: 48px;
+        border-radius: 16px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .nav .active {
+        background: var(--ink);
+        color: #fff;
+      }
+
+      @media (max-width: 1120px) {
+        .shots {
+          grid-template-columns: repeat(2, minmax(260px, 1fr));
+        }
+      }
+
+      @media (max-width: 620px) {
+        .page {
+          padding: 24px 12px 36px;
+        }
+
+        .shots {
+          grid-template-columns: 1fr;
+        }
+
+        .shot {
+          min-height: 1280px;
+        }
+
+        .copy {
+          padding: 40px 26px 16px;
+        }
+
+        .copy p {
+          font-size: 19px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="intro" aria-labelledby="page-title">
+        <h1 id="page-title">誤差貯金 ストアスクリーンショット</h1>
+        <p>
+          PNG化の元になる説明HTMLです。実装済みのMVP機能だけを扱い、
+          「使わなかった小さなお金を、前向きに記録する」印象でまとめています。
+        </p>
+      </section>
+
+      <section class="shots" aria-label="スクリーンショット案">
+        <article class="shot">
+          <div class="copy">
+            <span class="label">Screenshot 01</span>
+            <h2>守れたお金が、ひと目でわかる</h2>
+            <p>合計貯金額と今月守れたお金をホームに表示。小さな見送りが、ちゃんと残ります。</p>
+          </div>
+          <div class="phone" aria-label="ホーム画面の例">
+            <div class="phone-top">
+              <div class="phone-title">誤差貯金</div>
+              <div class="circle-button"></div>
+            </div>
+            <section class="card balance-card">
+              <div class="small">合計貯金額</div>
+              <div class="amount">¥18,420</div>
+              <div class="month-pill">今月 ¥6,300</div>
+            </section>
+            <div class="quick-grid">
+              <div class="card quick"><span class="small">タクシーを見送り</span><b>¥900</b></div>
+              <div class="card quick"><span class="small">買い物を見送り</span><b>¥1,200</b></div>
+            </div>
+            <section class="history">
+              <div class="card row">
+                <div class="icon">¥</div>
+                <div><strong>カフェの追加注文を見送った</strong><div class="small">今日</div></div>
+                <div class="yen">+¥480</div>
+              </div>
+              <div class="card row">
+                <div class="icon">¥</div>
+                <div><strong>歩ける距離の移動にした</strong><div class="small">昨日</div></div>
+                <div class="yen">+¥900</div>
+              </div>
+            </section>
+            <nav class="nav" aria-label="アプリ内ナビゲーション">
+              <span class="active">ホーム</span><span>記録</span><span>統計</span>
+            </nav>
+          </div>
+        </article>
+
+        <article class="shot">
+          <div class="copy">
+            <span class="label">Screenshot 02</span>
+            <h2>使わなかった金額をすぐ記録</h2>
+            <p>金額、カテゴリ、日付、メモを入力して保存。思いついたその場で誤差を残せます。</p>
+          </div>
+          <div class="phone" aria-label="記録画面の例">
+            <div class="phone-top">
+              <div class="phone-title">誤差を記録</div>
+              <div class="circle-button"></div>
+            </div>
+            <section class="card input-card">
+              <div class="field">
+                <div class="small">使わなかった金額</div>
+                <div class="amount-input"><span>¥</span><b>650</b></div>
+              </div>
+              <div class="field">
+                <div class="small">カテゴリ</div>
+                <div class="chips">
+                  <span class="chip">外食</span>
+                  <span class="chip">移動</span>
+                  <span class="chip">買い物</span>
+                  <span class="chip">サブスク</span>
+                </div>
+              </div>
+              <div class="field">
+                <div class="small">日付</div>
+                <div class="memo">2026年5月3日</div>
+              </div>
+              <div class="field">
+                <div class="small">メモ</div>
+                <div class="memo">コンビニのついで買いを見送った</div>
+              </div>
+              <div class="button">記録する</div>
+            </section>
+            <nav class="nav" aria-label="アプリ内ナビゲーション">
+              <span>ホーム</span><span class="active">記録</span><span>統計</span>
+            </nav>
+          </div>
+        </article>
+
+        <article class="shot">
+          <div class="copy">
+            <span class="label">Screenshot 03</span>
+            <h2>小さな誤差が、成長として見える</h2>
+            <p>記録回数や貯金額に応じてアバターが成長。続けた分だけ、画面に手応えが出ます。</p>
+          </div>
+          <div class="phone" aria-label="成長画面の例">
+            <div class="phone-top">
+              <div class="phone-title">成長と統計</div>
+              <div class="circle-button"></div>
+            </div>
+            <section class="card avatar-card">
+              <div class="avatar"><div class="face"><span></span><span></span></div></div>
+              <div class="level">Lv. 4</div>
+            </section>
+            <div class="stats-grid">
+              <div class="card stat"><span class="small">合計貯金額</span><strong>¥18,420</strong></div>
+              <div class="card stat"><span class="small">記録回数</span><strong>26回</strong></div>
+            </div>
+            <section class="card row" style="margin-top: 14px">
+              <div class="icon">✓</div>
+              <div><strong>小さな誤差が積み上がっています</strong><div class="small">できたことを静かに確認</div></div>
+            </section>
+            <nav class="nav" aria-label="アプリ内ナビゲーション">
+              <span>ホーム</span><span>記録</span><span class="active">統計</span>
+            </nav>
+          </div>
+        </article>
+
+        <article class="shot">
+          <div class="copy">
+            <span class="label">Screenshot 04</span>
+            <h2>月ごとの積み上がりを確認</h2>
+            <p>保存した記録は月別グラフに反映。どの月にどれだけ守れたかを見返せます。</p>
+          </div>
+          <div class="phone" aria-label="月別グラフ画面の例">
+            <div class="phone-top">
+              <div class="phone-title">成長と統計</div>
+              <div class="circle-button"></div>
+            </div>
+            <section class="card chart-card">
+              <div class="small">月ごとのグラフ</div>
+              <div class="bars">
+                <div class="bar"><span class="small">2.1万</span><div class="fill" style="height: 42%"></div><span class="small">12月</span></div>
+                <div class="bar"><span class="small">1.8万</span><div class="fill" style="height: 36%"></div><span class="small">1月</span></div>
+                <div class="bar"><span class="small">2.6万</span><div class="fill" style="height: 52%"></div><span class="small">2月</span></div>
+                <div class="bar"><span class="small">3.2万</span><div class="fill" style="height: 64%"></div><span class="small">3月</span></div>
+                <div class="bar"><span class="small">2.4万</span><div class="fill" style="height: 48%"></div><span class="small">4月</span></div>
+                <div class="bar"><span class="small">0.6万</span><div class="fill" style="height: 18%"></div><span class="small">5月</span></div>
+              </div>
+            </section>
+            <div class="stats-grid" style="margin-top: 14px">
+              <div class="card stat"><span class="small">今月</span><strong>¥6,300</strong></div>
+              <div class="card stat"><span class="small">合計</span><strong>¥18,420</strong></div>
+            </div>
+            <nav class="nav" aria-label="アプリ内ナビゲーション">
+              <span>ホーム</span><span>記録</span><span class="active">統計</span>
+            </nav>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
