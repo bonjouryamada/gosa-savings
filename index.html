@@ -1,44 +1,1151 @@
 <!doctype html>
 <html lang="ja">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="使わなかった小さなお金を記録し、貯金額と成長を見られるアプリ。"
-    />
-    <meta name="theme-color" content="#1E7F63" />
-    <meta property="og:title" content="誤差貯金" />
-    <meta
-      property="og:description"
-      content="使わなかった小さなお金を記録し、貯金額と成長を見られるアプリ。"
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="./public/icons/app-icon-512.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="誤差貯金" />
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="apple-touch-icon" href="./public/icons/app-icon-192.png" />
-    <title>誤差貯金</title>
-    <script type="importmap">
-      {
-        "imports": {
-          "react": "./src/vendor/react-lite.js",
-          "react-dom/client": "./src/vendor/react-dom-client-lite.js"
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>誤差貯金 - スマホプレビュー</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #102823;
+        --muted: #6f7f78;
+        --line: rgba(18, 50, 43, 0.12);
+        --green: #0b8d67;
+        --green-dark: #075b48;
+        --mint: #e8f6f0;
+        --soft: #f6faf7;
+        --gold: #f5c95b;
+        --rose: #f3a38e;
+        --blue: #7ca0ce;
+        --shadow: 0 18px 45px rgba(29, 72, 61, 0.14);
+        --soft-shadow: 0 8px 24px rgba(20, 58, 49, 0.1);
+        font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 20% 15%, rgba(180, 219, 197, 0.36), transparent 26rem),
+          radial-gradient(circle at 78% 82%, rgba(231, 216, 145, 0.24), transparent 22rem),
+          linear-gradient(135deg, #f6faf8 0%, #eef7f2 100%);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .phone {
+        width: min(100%, 390px);
+        height: min(844px, calc(100vh - 32px));
+        min-height: 720px;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 36px;
+        box-shadow: 0 28px 80px rgba(31, 75, 63, 0.2);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .app {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(180deg, #fff 0%, #fbfdfb 55%, #f9fcfa 100%);
+      }
+
+      .status {
+        height: 38px;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        padding: 0 26px 5px;
+        font-weight: 700;
+        font-size: 15px;
+      }
+
+      .status-icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+
+      .signal {
+        display: flex;
+        align-items: end;
+        gap: 2px;
+        height: 12px;
+      }
+
+      .signal i {
+        width: 3px;
+        border-radius: 4px;
+        background: #111;
+      }
+
+      .signal i:nth-child(1) { height: 4px; }
+      .signal i:nth-child(2) { height: 7px; }
+      .signal i:nth-child(3) { height: 10px; }
+      .wifi {
+        width: 14px;
+        height: 10px;
+        border: 3px solid #111;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-bottom: 0;
+        border-radius: 14px 14px 0 0;
+      }
+
+      .battery {
+        width: 22px;
+        height: 11px;
+        border: 2px solid #111;
+        border-radius: 3px;
+        position: relative;
+      }
+
+      .battery::before {
+        content: "";
+        position: absolute;
+        right: -5px;
+        top: 2px;
+        width: 2px;
+        height: 5px;
+        border-radius: 0 2px 2px 0;
+        background: #111;
+      }
+
+      .battery::after {
+        content: "";
+        position: absolute;
+        inset: 2px 5px 2px 2px;
+        border-radius: 1px;
+        background: #111;
+      }
+
+      .topbar {
+        height: 84px;
+        display: grid;
+        grid-template-columns: 52px 1fr 52px;
+        align-items: center;
+        padding: 10px 22px 8px;
+      }
+
+      .topbar h1 {
+        margin: 0;
+        text-align: center;
+        font-size: 21px;
+        letter-spacing: 0;
+      }
+
+      .icon-button {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        border-radius: 50%;
+        color: #40524c;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .icon-button svg,
+      .tab-button svg,
+      .chevron svg {
+        width: 24px;
+        height: 24px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .screens {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .screen {
+        position: absolute;
+        inset: 0;
+        overflow-y: auto;
+        padding: 0 16px 104px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(16px);
+        transition: opacity 240ms ease, transform 240ms ease;
+        scrollbar-width: none;
+      }
+
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .screen.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: var(--soft-shadow);
+      }
+
+      .balance-card {
+        min-height: 214px;
+        padding: 24px 22px;
+        display: grid;
+        grid-template-columns: 1fr 150px;
+        align-items: center;
+        background:
+          radial-gradient(circle at 78% 54%, rgba(170, 214, 192, 0.34), transparent 8rem),
+          linear-gradient(145deg, #ffffff 0%, #f1faf5 100%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #183b34;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .info-dot {
+        width: 18px;
+        height: 18px;
+        display: inline-grid;
+        place-items: center;
+        border: 1px solid rgba(8, 91, 72, 0.34);
+        border-radius: 50%;
+        color: #47736a;
+        font-size: 12px;
+      }
+
+      .big-money {
+        display: block;
+        margin-top: 14px;
+        color: var(--green-dark);
+        font-size: 48px;
+        line-height: 1;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .pill {
+        margin-top: 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 36px;
+        padding: 0 12px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.78);
+        color: #166f57;
+        font-size: 14px;
+        box-shadow: 0 5px 15px rgba(23, 67, 56, 0.08);
+      }
+
+      .pill svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .mascot-wrap {
+        justify-self: end;
+        position: relative;
+        width: 142px;
+        height: 148px;
+        display: grid;
+        place-items: center;
+      }
+
+      .mascot {
+        width: 150px;
+        object-fit: contain;
+        filter: drop-shadow(0 12px 14px rgba(21, 87, 63, 0.16));
+        animation: floaty 3.2s ease-in-out infinite;
+      }
+
+      .sparkle {
+        position: absolute;
+        color: #f0bd3e;
+        font-size: 18px;
+        animation: twinkle 1.8s ease-in-out infinite;
+      }
+
+      .sparkle.one { left: -2px; top: 56px; }
+      .sparkle.two { right: 2px; top: 74px; animation-delay: 0.6s; }
+
+      .month-card {
+        margin-top: 16px;
+        padding: 18px 20px;
+        display: grid;
+        grid-template-columns: 1fr 96px 28px;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .month-card .label {
+        color: #243a34;
+        font-weight: 700;
+      }
+
+      .month-card strong {
+        display: block;
+        margin-top: 8px;
+        color: var(--green);
+        font-size: 34px;
+        line-height: 1;
+      }
+
+      .month-card small {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+      }
+
+      .ring {
+        width: 78px;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        color: #14755d;
+        font-size: 22px;
+        font-weight: 800;
+        background: conic-gradient(var(--green) 0 93%, #e6ebe8 93% 100%);
+        position: relative;
+      }
+
+      .ring::after {
+        content: "";
+        position: absolute;
+        inset: 9px;
+        border-radius: 50%;
+        background: #fff;
+      }
+
+      .ring span {
+        position: relative;
+        z-index: 1;
+      }
+
+      .section-row {
+        margin: 18px 8px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .section-row h2 {
+        margin: 0;
+        font-size: 19px;
+      }
+
+      .text-link {
+        display: inline-flex;
+        gap: 5px;
+        align-items: center;
+        border: 0;
+        background: transparent;
+        color: #56645f;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .history {
+        overflow: hidden;
+      }
+
+      .history-item {
+        display: grid;
+        grid-template-columns: 46px 1fr auto 22px;
+        align-items: center;
+        gap: 10px;
+        min-height: 70px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        animation: rise 420ms ease both;
+      }
+
+      .history-item:last-child {
+        border-bottom: 0;
+      }
+
+      .history-icon,
+      .cat-dot {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+      }
+
+      .tone-mint { background: #e5f4ed; }
+      .tone-gold { background: #fff2d2; }
+      .tone-rose { background: #ffe8de; }
+      .tone-blue { background: #e7eef4; }
+
+      .asset-icon {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+      }
+
+      .history-body {
+        min-width: 0;
+      }
+
+      .history-body p {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .history-body small {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .amount-plus {
+        color: var(--green);
+        font-size: 17px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .chevron {
+        border: 0;
+        background: transparent;
+        color: #6f7c78;
+        padding: 0;
+      }
+
+      .quick-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .quick-card {
+        min-height: 90px;
+        padding: 10px 8px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fff;
+        display: grid;
+        place-items: center;
+        color: var(--ink);
+        cursor: pointer;
+        box-shadow: 0 7px 18px rgba(20, 58, 49, 0.08);
+      }
+
+      .quick-card span {
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .quick-card b {
+        color: var(--green);
+        font-size: 14px;
+      }
+
+      .add-screen {
+        padding-top: 4px;
+      }
+
+      .add-hero {
+        text-align: center;
+        padding: 2px 10px 18px;
+      }
+
+      .sprout {
+        font-size: 32px;
+        line-height: 1;
+        animation: sprout 1.9s ease-in-out infinite;
+      }
+
+      .add-hero h2 {
+        margin: 14px 0 8px;
+        font-size: 26px;
+      }
+
+      .add-hero p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .input-card {
+        padding: 22px 16px 14px;
+      }
+
+      .field-label {
+        display: block;
+        font-weight: 700;
+      }
+
+      .amount-entry {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        align-items: center;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .amount-entry span {
+        color: var(--green-dark);
+        font-size: 34px;
+        font-weight: 800;
+      }
+
+      .amount-entry input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        color: var(--green);
+        font-size: 58px;
+        line-height: 1;
+        font-weight: 800;
+        text-align: right;
+        background: transparent;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .amount-entry input::placeholder {
+        color: rgba(11, 141, 103, 0.36);
+      }
+
+      .shortcut-row,
+      .category-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .shortcut-row {
+        margin: 16px 0 24px;
+      }
+
+      .shortcut-row button {
+        flex: 1 1 72px;
+        min-height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        background: #fdfdfd;
+        color: #38443f;
+        cursor: pointer;
+      }
+
+      .memo-label textarea {
+        width: 100%;
+        min-height: 86px;
+        margin-top: 8px;
+        padding: 12px;
+        resize: none;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        outline: 0;
+        background: #fff;
+      }
+
+      .counter {
+        display: block;
+        margin-top: 6px;
+        text-align: right;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .category-title {
+        margin: 22px 8px 10px;
+        color: #42524c;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .category-chip {
+        min-height: 74px;
+        flex: 1 1 88px;
+        display: grid;
+        place-items: center;
+        gap: 3px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+        color: #243a34;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(20, 58, 49, 0.07);
+      }
+
+      .category-chip.is-selected {
+        border-color: rgba(11, 141, 103, 0.55);
+        box-shadow: 0 0 0 3px rgba(11, 141, 103, 0.12);
+      }
+
+      .category-chip span {
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .save-button {
+        width: 100%;
+        min-height: 62px;
+        margin-top: 28px;
+        border: 0;
+        border-radius: 15px;
+        color: #fff;
+        background: linear-gradient(135deg, #19a673, #07845d);
+        box-shadow: 0 12px 26px rgba(8, 132, 93, 0.24);
+        font-size: 22px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .save-button:disabled {
+        opacity: 0.45;
+      }
+
+      .segment {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        margin: 2px 0 30px;
+        padding: 4px;
+        border-radius: 14px;
+        background: #edf4f0;
+      }
+
+      .segment button {
+        min-height: 42px;
+        border: 0;
+        border-radius: 11px;
+        background: transparent;
+        color: #5a6762;
+        cursor: pointer;
+      }
+
+      .segment .active {
+        background: #fff;
+        color: var(--green);
+        font-weight: 800;
+        box-shadow: 0 5px 12px rgba(20, 58, 49, 0.12);
+      }
+
+      .chart-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+
+      .chart-title h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .chart-title small {
+        color: var(--muted);
+      }
+
+      .chart {
+        height: 292px;
+        display: grid;
+        grid-template-columns: 46px 1fr;
+        gap: 10px;
+      }
+
+      .axis {
+        display: grid;
+        grid-template-rows: repeat(5, 1fr);
+        color: #687671;
+        font-size: 12px;
+      }
+
+      .bars {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        align-items: end;
+        gap: 12px;
+        padding-top: 22px;
+        border-bottom: 1px solid #aab6b0;
+      }
+
+      .bars::before {
+        content: "";
+        position: absolute;
+        inset: 22px 0 0;
+        background: repeating-linear-gradient(to bottom, rgba(20, 58, 49, 0.12), rgba(20, 58, 49, 0.12) 1px, transparent 1px, transparent 61px);
+      }
+
+      .bar {
+        height: 100%;
+        position: relative;
+        display: grid;
+        grid-template-rows: 1fr 48px;
+        justify-items: center;
+      }
+
+      .bar-fill {
+        width: 28px;
+        align-self: end;
+        border-radius: 5px 5px 0 0;
+        background: linear-gradient(180deg, #d7eadf, #b5dec9);
+        animation: grow 800ms ease both;
+        transform-origin: bottom;
+        z-index: 1;
+      }
+
+      .bar.current .bar-fill {
+        background: linear-gradient(180deg, #13986d, #0d765a);
+      }
+
+      .bar-value {
+        position: absolute;
+        top: calc(100% - var(--bar-height) - 22px);
+        transform: translateY(-100%);
+        color: #4d5e57;
+        font-size: 11px;
+        white-space: nowrap;
+        z-index: 2;
+      }
+
+      .bar.current .bar-value {
+        color: var(--green-dark);
+        font-weight: 800;
+      }
+
+      .bar-label {
+        display: grid;
+        place-items: center;
+        color: #56645f;
+        font-size: 12px;
+        text-align: center;
+        line-height: 1.35;
+      }
+
+      .stat-cards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .stat-card {
+        min-height: 128px;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .stat-card span {
+        font-weight: 800;
+      }
+
+      .stat-card strong {
+        display: block;
+        margin-top: 12px;
+        color: var(--green-dark);
+        font-size: 28px;
+      }
+
+      .stat-card small {
+        display: block;
+        margin-top: 6px;
+      }
+
+      .encourage {
+        min-height: 132px;
+        margin-top: 18px;
+        padding: 20px 118px 18px 22px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #eef9f4, #fff);
+      }
+
+      .encourage h3 {
+        margin: 0 0 8px;
+        color: #0f765d;
+        font-size: 16px;
+      }
+
+      .encourage p {
+        margin: 0;
+        color: #596b64;
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .encourage img {
+        position: absolute;
+        width: 130px;
+        right: -4px;
+        bottom: -20px;
+      }
+
+      .bottom-nav {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 78px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        padding: 7px 14px 9px;
+        border-top: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(16px);
+      }
+
+      .tab-button {
+        display: grid;
+        place-items: center;
+        gap: 2px;
+        border: 0;
+        background: transparent;
+        color: #68716e;
+        cursor: pointer;
+      }
+
+      .tab-button span {
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .tab-button.active {
+        color: var(--green);
+      }
+
+      @keyframes floaty {
+        0%, 100% { transform: translateY(0) rotate(-1deg); }
+        50% { transform: translateY(-8px) rotate(1deg); }
+      }
+
+      @keyframes twinkle {
+        0%, 100% { opacity: 0.35; transform: scale(0.82); }
+        50% { opacity: 1; transform: scale(1.12); }
+      }
+
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes sprout {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-4px) scale(1.05); }
+      }
+
+      @keyframes grow {
+        from { transform: scaleY(0.2); opacity: 0.5; }
+        to { transform: scaleY(1); opacity: 1; }
+      }
+
+      @media (max-width: 430px) {
+        body {
+          padding: 0;
+          background: #fff;
+        }
+
+        .phone {
+          width: 100vw;
+          height: 100vh;
+          min-height: 680px;
+          border-radius: 0;
+          border: 0;
         }
       }
-    </script>
+    </style>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="./src/main.js"></script>
+
     <script>
-      if (location.protocol !== "file:" && "serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.register("./sw.js").catch(() => {});
-        });
+      const h = (tag, props = {}, ...children) => ({ tag, props, children: children.flat() });
+      const state = {
+        tab: "home",
+        amount: "1280",
+        memo: "タクシーを使わなかった\n渋谷駅 → 恵比寿駅",
+        category: "taxi",
+        records: [
+          { id: 1, category: "taxi", memo: "タクシーを使わなかった", detail: "渋谷駅 → 恵比寿駅", amount: 1280, fresh: false },
+          { id: 2, category: "ramen", memo: "ラーメンの味玉トッピングを我慢", detail: "味玉は次回のお楽しみに", amount: 120, fresh: false },
+          { id: 3, category: "shopping", memo: "セール品を買わなかった", detail: "気になっていたバッグ", amount: 3800, fresh: false },
+          { id: 4, category: "subscription", memo: "サブスクを見直して解約", detail: "使っていなかった音楽アプリ", amount: 980, fresh: false }
+        ]
+      };
+
+      const asset = (file) => "output/imagegen/" + file;
+      const yen = (value) => "¥" + Number(value).toLocaleString("ja-JP");
+      const icons = {
+        menu: "M4 6h16M4 12h16M4 18h16",
+        bell: "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",
+        back: "M15 18l-6-6 6-6",
+        calendar: "M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z",
+        chevron: "M9 18l6-6-6-6",
+        home: "M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3V10.5Z",
+        plus: "M12 5v14M5 12h14",
+        chart: "M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-9",
+        user: "M20 21a8 8 0 0 0-16 0M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
+        up: "M7 17 17 7M8 7h9v9"
+      };
+      const categories = {
+        taxi: { label: "タクシー", tone: "mint", icon: "icon-taxi-trimmed.png", amount: 780, memo: "タクシーを使わず歩いた" },
+        ramen: { label: "ラーメン", tone: "gold", icon: "icon-ramen-trimmed.png", amount: 320, memo: "ラーメンのトッピングを我慢" },
+        shopping: { label: "ショッピング", tone: "rose", icon: "icon-shopping-trimmed.png", amount: 1480, memo: "予定外の買い物を見送った" },
+        subscription: { label: "サブスク", tone: "blue", icon: "icon-subscription-trimmed.png", amount: 980, memo: "使っていないサブスクを停止" }
+      };
+      const nav = [
+        ["home", "ホーム", icons.home],
+        ["add", "記録する", icons.plus],
+        ["stats", "統計", icons.chart],
+        ["mypage", "マイページ", icons.user]
+      ];
+
+      function Icon(path) {
+        return h("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, h("path", { d: path }));
       }
+
+      function CategoryIcon(key) {
+        return h("img", { class: "asset-icon", src: asset(categories[key].icon), alt: "" });
+      }
+
+      function total() {
+        return state.records.reduce((sum, record) => sum + record.amount, 123250);
+      }
+
+      function renderNode(vnode) {
+        if (vnode == null || vnode === false) return document.createTextNode("");
+        if (typeof vnode === "string" || typeof vnode === "number") return document.createTextNode(vnode);
+        const el = document.createElement(vnode.tag);
+        Object.entries(vnode.props || {}).forEach(([key, value]) => {
+          if (key === "class") el.className = value;
+          else if (key === "style" && typeof value === "object") Object.assign(el.style, value);
+          else if (key.startsWith("on") && typeof value === "function") el.addEventListener(key.slice(2).toLowerCase(), value);
+          else if (value !== false && value != null) el.setAttribute(key, value === true ? "" : value);
+        });
+        vnode.children.forEach((child) => el.appendChild(renderNode(child)));
+        return el;
+      }
+
+      function setState(patch) {
+        Object.assign(state, patch);
+        render();
+      }
+
+      function saveRecord(amount, memo, category) {
+        const nextAmount = Number(amount || state.amount);
+        if (!nextAmount) return;
+        const cat = category || state.category;
+        state.records = [
+          { id: Date.now(), category: cat, memo: memo || state.memo.split("\n")[0] || "小さな誤差を貯金", detail: (memo || state.memo).split("\n")[1] || "今日の小さな見送り", amount: nextAmount, fresh: true },
+          ...state.records.map((record) => ({ ...record, fresh: false }))
+        ];
+        state.amount = "";
+        state.memo = "";
+        state.tab = "home";
+        render();
+      }
+
+      function StatusBar() {
+        return h("div", { class: "status" },
+          h("span", null, "9:41"),
+          h("div", { class: "status-icons" },
+            h("span", { class: "signal" }, h("i"), h("i"), h("i")),
+            h("span", { class: "wifi" }),
+            h("span", { class: "battery" })
+          )
+        );
+      }
+
+      function TopBar() {
+        const title = state.tab === "add" ? "誤差を記録" : state.tab === "stats" ? "統計" : "誤差貯金";
+        const leftIcon = state.tab === "add" ? icons.back : icons.menu;
+        const rightIcon = state.tab === "stats" ? icons.calendar : icons.bell;
+        return h("header", { class: "topbar" },
+          h("button", { class: "icon-button", type: "button", "aria-label": "戻る", onclick: () => setState({ tab: "home" }) }, Icon(leftIcon)),
+          h("h1", null, title),
+          h("button", { class: "icon-button", type: "button", "aria-label": "通知" }, Icon(rightIcon))
+        );
+      }
+
+      function Home() {
+        const quicks = ["taxi", "ramen", "subscription"];
+        return h("section", { class: "screen " + (state.tab === "home" ? "active" : "") },
+          h("section", { class: "card balance-card" },
+            h("div", null,
+              h("span", { class: "eyebrow" }, "合計貯金額", h("span", { class: "info-dot" }, "i")),
+              h("strong", { class: "big-money" }, yen(total())),
+              h("span", { class: "pill" }, "先月比 +¥12,830", Icon(icons.up))
+            ),
+            h("div", { class: "mascot-wrap" },
+              h("span", { class: "sparkle one" }, "✦"),
+              h("img", { class: "mascot", src: asset("mascot-trimmed.png"), alt: "誤差貯金のマスコット" }),
+              h("span", { class: "sparkle two" }, "✦")
+            )
+          ),
+          h("section", { class: "card month-card" },
+            h("div", null,
+              h("span", { class: "label" }, "今月守れたお金"),
+              h("strong", null, "¥18,760"),
+              h("small", null, "月の目標 ¥20,000")
+            ),
+            h("div", { class: "ring" }, h("span", null, "93%")),
+            h("button", { class: "chevron", type: "button", onclick: () => setState({ tab: "stats" }) }, Icon(icons.chevron))
+          ),
+          h("div", { class: "quick-row" }, quicks.map((key) =>
+            h("button", { class: "quick-card", type: "button", onclick: () => saveRecord(categories[key].amount, categories[key].memo, key) },
+              CategoryIcon(key), h("span", null, categories[key].label), h("b", null, yen(categories[key].amount))
+            )
+          )),
+          h("div", { class: "section-row" },
+            h("h2", null, "履歴"),
+            h("button", { class: "text-link", type: "button", onclick: () => setState({ tab: "add" }) }, "すべて見る", Icon(icons.chevron))
+          ),
+          h("section", { class: "card history" }, state.records.slice(0, 4).map((record) => HistoryItem(record)))
+        );
+      }
+
+      function HistoryItem(record) {
+        const cat = categories[record.category] || categories.shopping;
+        return h("article", { class: "history-item", style: { animationDelay: record.fresh ? "0ms" : "80ms" } },
+          h("div", { class: "history-icon tone-" + cat.tone }, CategoryIcon(record.category)),
+          h("div", { class: "history-body" }, h("p", null, record.memo), h("small", null, record.detail)),
+          h("strong", { class: "amount-plus" }, "+" + yen(record.amount)),
+          h("button", { class: "chevron", type: "button", "aria-label": "詳細" }, Icon(icons.chevron))
+        );
+      }
+
+      function Add() {
+        return h("section", { class: "screen add-screen " + (state.tab === "add" ? "active" : "") },
+          h("div", { class: "add-hero" },
+            h("div", { class: "sprout" }, "🌱"),
+            h("h2", null, "誤差を記録"),
+            h("p", null, "守れたお金を記録して、未来の自分を応援しよう")
+          ),
+          h("section", { class: "card input-card" },
+            h("label", { class: "field-label" }, "使わなかった金額",
+              h("div", { class: "amount-entry" },
+                h("span", null, "¥"),
+                h("input", { type: "number", min: "1", inputmode: "numeric", placeholder: "0", value: state.amount, oninput: (event) => setState({ amount: event.target.value }) })
+              )
+            ),
+            h("div", { class: "shortcut-row" }, [100, 500, 1000, 5000].map((value) =>
+              h("button", { type: "button", onclick: () => setState({ amount: String(value) }) }, "+" + value.toLocaleString("ja-JP"))
+            )),
+            h("label", { class: "field-label memo-label" }, "メモ",
+              h("textarea", { maxlength: "100", rows: "4", placeholder: "タクシーを使わなかった\n渋谷駅 → 恵比寿駅", oninput: (event) => setState({ memo: event.target.value }) }, state.memo)
+            ),
+            h("span", { class: "counter" }, state.memo.length + "/100")
+          ),
+          h("p", { class: "category-title" }, "カテゴリを選ぶ（任意）"),
+          h("div", { class: "category-row" }, Object.keys(categories).map((key) =>
+            h("button", { class: "category-chip " + (state.category === key ? "is-selected" : ""), type: "button", onclick: () => setState({ category: key, amount: String(categories[key].amount), memo: categories[key].memo }) },
+              CategoryIcon(key), h("span", null, categories[key].label)
+            )
+          )),
+          h("button", { class: "save-button", type: "button", disabled: Number(state.amount) ? null : true, onclick: () => saveRecord() }, "記録する")
+        );
+      }
+
+      function Stats() {
+        const months = [
+          ["12月", "2025", 12450],
+          ["1月", "2026", 16380],
+          ["2月", "2026", 18920],
+          ["3月", "2026", 28460],
+          ["4月", "2026", 22130],
+          ["5月", "2026", 18760]
+        ];
+        const max = 40000;
+        return h("section", { class: "screen " + (state.tab === "stats" ? "active" : "") },
+          h("div", { class: "segment" }, h("button", { class: "active", type: "button" }, "月ごとのグラフ"), h("button", { type: "button" }, "年間のまとめ")),
+          h("section", null,
+            h("div", { class: "chart-title" }, h("h2", null, "月ごとのグラフ"), h("small", null, "（単位：円）")),
+            h("div", { class: "chart" },
+              h("div", { class: "axis" }, ["40,000", "30,000", "20,000", "10,000", "0"].map((label) => h("span", null, label))),
+              h("div", { class: "bars" }, months.map((month, index) => {
+                const height = Math.round((month[2] / max) * 100);
+                return h("div", { class: "bar " + (index === months.length - 1 ? "current" : ""), style: { "--bar-height": height + "%" } },
+                  h("span", { class: "bar-value" }, month[2].toLocaleString("ja-JP")),
+                  h("div", { class: "bar-fill", style: { height: height + "%" } }),
+                  h("span", { class: "bar-label" }, month[0], h("br"), month[1])
+                );
+              }))
+            )
+          ),
+          h("div", { class: "stat-cards" },
+            h("section", { class: "card stat-card" }, h("span", null, "月間平均 ", h("span", { class: "info-dot" }, "i")), h("strong", null, "¥19,183")),
+            h("section", { class: "card stat-card" }, h("span", null, "ベスト月 👑"), h("strong", null, "¥28,460"), h("small", null, "2026年3月"))
+          ),
+          h("section", { class: "card encourage" },
+            h("h3", null, "コツコツが、大きなチカラに。"),
+            h("p", null, "無理なく続けているあなたは、ちゃんと未来を育てています。"),
+            h("img", { src: asset("mascot-trimmed.png"), alt: "" })
+          )
+        );
+      }
+
+      function BottomNav() {
+        return h("nav", { class: "bottom-nav", "aria-label": "メインナビゲーション" }, nav.map(([key, label, path]) =>
+          h("button", { class: "tab-button " + (state.tab === key ? "active" : ""), type: "button", onclick: () => key !== "mypage" && setState({ tab: key }) },
+            Icon(path), h("span", null, label)
+          )
+        ));
+      }
+
+      function App() {
+        return h("main", { class: "phone" },
+          h("div", { class: "app" },
+            StatusBar(),
+            TopBar(),
+            h("div", { class: "screens" }, Home(), Add(), Stats()),
+            BottomNav()
+          )
+        );
+      }
+
+      function render() {
+        const root = document.getElementById("root");
+        root.replaceChildren(renderNode(App()));
+      }
+
+      render();
     </script>
   </body>
 </html>
