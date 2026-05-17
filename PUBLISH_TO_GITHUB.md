@@ -21,7 +21,7 @@
 9. 次のURLを開く。
 
 ```text
-https://bonjouryamada.github.io/gosa-savings/?v=3
+https://bonjouryamada.github.io/gosa-savings/?v=6
 ```
 
 ## まだ白い場合
@@ -30,11 +30,17 @@ https://bonjouryamada.github.io/gosa-savings/?v=3
 
 - PCならシークレットウィンドウで開く。
 - スマホなら別のブラウザで一度開く。
-- `?v=3` を付けて開く。
+- `?v=6` を付けて開く。
 
 ```text
-https://bonjouryamada.github.io/gosa-savings/?v=3
+https://bonjouryamada.github.io/gosa-savings/?v=6
 ```
+
+## ホーム画面に追加済みの場合
+
+すでにホーム画面へ追加している古い「誤差貯金」は、一度削除してから追加し直してください。
+
+古いPWAは、前のService Workerやキャッシュを握って白い画面を出し続けることがあります。
 
 ## Pages設定の確認
 

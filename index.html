@@ -1,46 +1,62 @@
 <!doctype html>
 <html lang="ja">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>誤差貯金 - スマホプレビュー</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="使わなかった小さなお金を記録し、貯金額と成長を見られるアプリ。"
+    />
+    <meta name="theme-color" content="#1E7F63" />
+    <meta property="og:title" content="誤差貯金" />
+    <meta
+      property="og:description"
+      content="使わなかった小さなお金を記録し、貯金額と成長を見られるアプリ。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./public/icons/app-icon-512.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="誤差貯金" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./public/icons/app-icon-192.png" />
+    <title>誤差貯金</title>
     <style>
       :root {
         color-scheme: light;
-        --ink: #102823;
-        --muted: #6f7f78;
-        --line: rgba(18, 50, 43, 0.12);
-        --green: #0b8d67;
-        --green-dark: #075b48;
-        --mint: #e8f6f0;
-        --soft: #f6faf7;
-        --gold: #f5c95b;
-        --rose: #f3a38e;
-        --blue: #7ca0ce;
-        --shadow: 0 18px 45px rgba(29, 72, 61, 0.14);
-        --soft-shadow: 0 8px 24px rgba(20, 58, 49, 0.1);
-        font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+        --bg: #f5f6f3;
+        --paper: #ffffff;
+        --paper-soft: #fbfcf9;
+        --mint: #edf5f1;
+        --mint-strong: #dceee6;
+        --ink: #17201c;
+        --muted: #78817b;
+        --line: rgba(23, 32, 28, 0.1);
+        --green: #1e7f63;
+        --green-deep: #10634c;
+        --gold: #d8a437;
+        --orange: #df8d54;
+        --shadow: 0 18px 50px rgba(27, 54, 43, 0.12);
+        font-family: "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
       }
 
       * {
         box-sizing: border-box;
       }
 
-      html,
-      body {
-        min-height: 100%;
+      html {
+        background: var(--bg);
       }
 
       body {
+        min-width: 320px;
+        min-height: 100vh;
         margin: 0;
-        color: var(--ink);
         background:
-          radial-gradient(circle at 20% 15%, rgba(180, 219, 197, 0.36), transparent 26rem),
-          radial-gradient(circle at 78% 82%, rgba(231, 216, 145, 0.24), transparent 22rem),
-          linear-gradient(135deg, #f6faf8 0%, #eef7f2 100%);
-        display: grid;
-        place-items: center;
-        padding: 24px;
+          radial-gradient(circle at 12% 8%, rgba(30, 127, 99, 0.1), transparent 28rem),
+          radial-gradient(circle at 88% 12%, rgba(216, 164, 55, 0.16), transparent 24rem),
+          linear-gradient(160deg, #fbfbf3 0%, #eef6f1 48%, #f8f3e8 100%);
+        color: var(--ink);
       }
 
       button,
@@ -50,1102 +66,1036 @@
       }
 
       button {
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .phone {
-        width: min(100%, 390px);
-        height: min(844px, calc(100vh - 32px));
-        min-height: 720px;
-        background: rgba(255, 255, 255, 0.96);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        border-radius: 36px;
-        box-shadow: 0 28px 80px rgba(31, 75, 63, 0.2);
-        overflow: hidden;
-        position: relative;
+        border: 0;
+        cursor: pointer;
       }
 
       .app {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        background: linear-gradient(180deg, #fff 0%, #fbfdfb 55%, #f9fcfa 100%);
+        width: min(100%, 520px);
+        min-height: 100vh;
+        margin: 0 auto;
+        padding: 18px 14px 22px;
       }
 
-      .status {
-        height: 38px;
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        padding: 0 26px 5px;
-        font-weight: 700;
-        font-size: 15px;
-      }
-
-      .status-icons {
-        display: flex;
-        gap: 5px;
-        align-items: center;
-      }
-
-      .signal {
-        display: flex;
-        align-items: end;
-        gap: 2px;
-        height: 12px;
-      }
-
-      .signal i {
-        width: 3px;
-        border-radius: 4px;
-        background: #111;
-      }
-
-      .signal i:nth-child(1) { height: 4px; }
-      .signal i:nth-child(2) { height: 7px; }
-      .signal i:nth-child(3) { height: 10px; }
-      .wifi {
-        width: 14px;
-        height: 10px;
-        border: 3px solid #111;
-        border-left-color: transparent;
-        border-right-color: transparent;
-        border-bottom: 0;
-        border-radius: 14px 14px 0 0;
-      }
-
-      .battery {
-        width: 22px;
-        height: 11px;
-        border: 2px solid #111;
-        border-radius: 3px;
-        position: relative;
-      }
-
-      .battery::before {
-        content: "";
-        position: absolute;
-        right: -5px;
-        top: 2px;
-        width: 2px;
-        height: 5px;
-        border-radius: 0 2px 2px 0;
-        background: #111;
-      }
-
-      .battery::after {
-        content: "";
-        position: absolute;
-        inset: 2px 5px 2px 2px;
-        border-radius: 1px;
-        background: #111;
+      .shell {
+        min-height: calc(100vh - 40px);
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: var(--shadow);
+        overflow: hidden;
       }
 
       .topbar {
-        height: 84px;
-        display: grid;
-        grid-template-columns: 52px 1fr 52px;
+        display: flex;
         align-items: center;
-        padding: 10px 22px 8px;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 22px 22px 16px;
+        background: linear-gradient(135deg, rgba(237, 245, 241, 0.98), rgba(255, 255, 255, 0.96));
+        border-bottom: 1px solid var(--line);
       }
 
-      .topbar h1 {
-        margin: 0;
-        text-align: center;
-        font-size: 21px;
-        letter-spacing: 0;
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
 
-      .icon-button {
+      .brand-icon {
         width: 42px;
         height: 42px;
-        display: grid;
-        place-items: center;
-        border: 0;
-        border-radius: 50%;
-        color: #40524c;
-        background: transparent;
-        cursor: pointer;
+        border-radius: 14px;
+        background: var(--mint);
+        object-fit: contain;
+        padding: 4px;
       }
 
-      .icon-button svg,
-      .tab-button svg,
-      .chevron svg {
-        width: 24px;
-        height: 24px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+      .brand-title {
+        margin: 0;
+        color: var(--green-deep);
+        font-size: 22px;
+        line-height: 1.2;
       }
 
-      .screens {
-        flex: 1;
-        position: relative;
-        overflow: hidden;
+      .brand-sub {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
       }
 
       .screen {
-        position: absolute;
-        inset: 0;
-        overflow-y: auto;
-        padding: 0 16px 104px;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateX(16px);
-        transition: opacity 240ms ease, transform 240ms ease;
-        scrollbar-width: none;
-      }
-
-      .screen::-webkit-scrollbar {
         display: none;
+        min-height: 680px;
+        padding: 18px 18px 104px;
       }
 
-      .screen.active {
-        opacity: 1;
-        pointer-events: auto;
-        transform: translateX(0);
-      }
-
-      .card {
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        background: rgba(255, 255, 255, 0.9);
-        box-shadow: var(--soft-shadow);
-      }
-
-      .balance-card {
-        min-height: 214px;
-        padding: 24px 22px;
-        display: grid;
-        grid-template-columns: 1fr 150px;
-        align-items: center;
-        background:
-          radial-gradient(circle at 78% 54%, rgba(170, 214, 192, 0.34), transparent 8rem),
-          linear-gradient(145deg, #ffffff 0%, #f1faf5 100%);
-      }
-
-      .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        color: #183b34;
-        font-size: 15px;
-        font-weight: 700;
-      }
-
-      .info-dot {
-        width: 18px;
-        height: 18px;
-        display: inline-grid;
-        place-items: center;
-        border: 1px solid rgba(8, 91, 72, 0.34);
-        border-radius: 50%;
-        color: #47736a;
-        font-size: 12px;
-      }
-
-      .big-money {
+      .screen.is-active {
         display: block;
-        margin-top: 14px;
-        color: var(--green-dark);
-        font-size: 48px;
-        line-height: 1;
-        font-weight: 800;
-        font-variant-numeric: tabular-nums;
       }
 
-      .pill {
-        margin-top: 18px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        min-height: 36px;
-        padding: 0 12px;
+      .hero-card,
+      .panel,
+      .record-card,
+      .empty-card {
         border: 1px solid var(--line);
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.78);
-        color: #166f57;
-        font-size: 14px;
-        box-shadow: 0 5px 15px rgba(23, 67, 56, 0.08);
+        border-radius: 24px;
+        background: var(--paper);
+        box-shadow: 0 12px 28px rgba(27, 54, 43, 0.08);
       }
 
-      .pill svg {
-        width: 18px;
-        height: 18px;
+      .hero-card {
+        display: grid;
+        gap: 18px;
+        padding: 20px;
+        background: linear-gradient(145deg, var(--mint), #fff 72%);
+      }
+
+      .hero-main {
+        display: grid;
+        grid-template-columns: 1fr 126px;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .label {
+        display: block;
+        color: var(--green-deep);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .total-amount {
+        margin: 4px 0 0;
+        color: var(--ink);
+        font-size: clamp(42px, 13vw, 62px);
+        font-weight: 950;
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      .month-pill {
+        display: inline-flex;
+        width: fit-content;
+        margin-top: 12px;
+        border-radius: 999px;
+        background: var(--green);
+        color: #fff;
+        padding: 8px 14px;
+        font-size: 14px;
+        font-weight: 900;
       }
 
       .mascot-wrap {
-        justify-self: end;
         position: relative;
-        width: 142px;
-        height: 148px;
         display: grid;
         place-items: center;
+        width: 126px;
+        height: 126px;
+        border-radius: 36px;
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      .mascot-wrap::before,
+      .mascot-wrap::after {
+        position: absolute;
+        pointer-events: none;
+      }
+
+      .mascot-wrap::before {
+        content: "";
+        inset: 14px;
+        border-radius: 999px;
+        background: rgba(216, 164, 55, 0.12);
+        transform: scale(var(--aura-scale, 0.7));
       }
 
       .mascot {
-        width: 150px;
+        position: relative;
+        z-index: 2;
+        width: 92px;
+        height: 92px;
         object-fit: contain;
-        filter: drop-shadow(0 12px 14px rgba(21, 87, 63, 0.16));
-        animation: floaty 3.2s ease-in-out infinite;
+        filter: drop-shadow(0 10px 16px rgba(16, 99, 76, 0.16));
+        transform: scale(var(--mascot-scale, 0.86));
       }
 
-      .sparkle {
-        position: absolute;
-        color: #f0bd3e;
-        font-size: 18px;
-        animation: twinkle 1.8s ease-in-out infinite;
+      .mascot-wrap::after {
+        content: var(--mascot-badge, "");
+        z-index: 3;
+        right: 8px;
+        top: 6px;
+        color: var(--gold);
+        font-size: 28px;
+        font-weight: 900;
+        text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
       }
 
-      .sparkle.one { left: -2px; top: 56px; }
-      .sparkle.two { right: 2px; top: 74px; animation-delay: 0.6s; }
+      .stage-0 { --mascot-scale: 0.78; --aura-scale: 0.45; }
+      .stage-1 { --mascot-scale: 0.84; --aura-scale: 0.62; --mascot-badge: "＊"; }
+      .stage-2 { --mascot-scale: 0.92; --aura-scale: 0.78; --mascot-badge: "✦"; }
+      .stage-3 { --mascot-scale: 1; --aura-scale: 0.94; --mascot-badge: "✿"; }
+      .stage-4 { --mascot-scale: 1.05; --aura-scale: 1.08; --mascot-badge: "★"; }
+      .stage-5 { --mascot-scale: 1.1; --aura-scale: 1.18; --mascot-badge: "♛"; }
 
-      .month-card {
-        margin-top: 16px;
-        padding: 18px 20px;
-        display: grid;
-        grid-template-columns: 1fr 96px 28px;
-        gap: 10px;
-        align-items: center;
-      }
-
-      .month-card .label {
-        color: #243a34;
-        font-weight: 700;
-      }
-
-      .month-card strong {
-        display: block;
-        margin-top: 8px;
-        color: var(--green);
-        font-size: 34px;
-        line-height: 1;
-      }
-
-      .month-card small {
-        display: block;
-        margin-top: 8px;
+      .stage-text {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
         color: var(--muted);
-      }
-
-      .ring {
-        width: 78px;
-        aspect-ratio: 1;
-        display: grid;
-        place-items: center;
-        border-radius: 50%;
-        color: #14755d;
-        font-size: 22px;
+        font-size: 13px;
         font-weight: 800;
-        background: conic-gradient(var(--green) 0 93%, #e6ebe8 93% 100%);
-        position: relative;
       }
 
-      .ring::after {
-        content: "";
-        position: absolute;
-        inset: 9px;
-        border-radius: 50%;
-        background: #fff;
+      .primary-button {
+        width: 100%;
+        border-radius: 22px;
+        background: var(--green);
+        color: #fff;
+        padding: 17px 18px;
+        font-size: 18px;
+        font-weight: 950;
+        box-shadow: 0 16px 30px rgba(30, 127, 99, 0.22);
       }
 
-      .ring span {
-        position: relative;
-        z-index: 1;
+      .secondary-button {
+        border-radius: 18px;
+        background: var(--mint);
+        color: var(--green-deep);
+        padding: 12px 14px;
+        font-weight: 900;
       }
 
-      .section-row {
-        margin: 18px 8px 10px;
+      .section-title {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 12px;
+        margin: 22px 0 12px;
       }
 
-      .section-row h2 {
+      .section-title h2 {
         margin: 0;
-        font-size: 19px;
-      }
-
-      .text-link {
-        display: inline-flex;
-        gap: 5px;
-        align-items: center;
-        border: 0;
-        background: transparent;
-        color: #56645f;
-        cursor: pointer;
-        font-size: 13px;
-      }
-
-      .history {
-        overflow: hidden;
-      }
-
-      .history-item {
-        display: grid;
-        grid-template-columns: 46px 1fr auto 22px;
-        align-items: center;
-        gap: 10px;
-        min-height: 70px;
-        padding: 10px 12px;
-        border-bottom: 1px solid var(--line);
-        animation: rise 420ms ease both;
-      }
-
-      .history-item:last-child {
-        border-bottom: 0;
-      }
-
-      .history-icon,
-      .cat-dot {
-        width: 42px;
-        height: 42px;
-        display: grid;
-        place-items: center;
-        border-radius: 50%;
-      }
-
-      .tone-mint { background: #e5f4ed; }
-      .tone-gold { background: #fff2d2; }
-      .tone-rose { background: #ffe8de; }
-      .tone-blue { background: #e7eef4; }
-
-      .asset-icon {
-        width: 32px;
-        height: 32px;
-        object-fit: contain;
-      }
-
-      .history-body {
-        min-width: 0;
-      }
-
-      .history-body p {
-        margin: 0;
-        font-size: 14px;
-        font-weight: 700;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .history-body small {
-        display: block;
-        margin-top: 4px;
-        color: var(--muted);
-        font-size: 12px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .amount-plus {
-        color: var(--green);
-        font-size: 17px;
-        font-weight: 800;
-        white-space: nowrap;
-      }
-
-      .chevron {
-        border: 0;
-        background: transparent;
-        color: #6f7c78;
-        padding: 0;
-      }
-
-      .quick-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        margin-top: 14px;
-      }
-
-      .quick-card {
-        min-height: 90px;
-        padding: 10px 8px;
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        background: #fff;
-        display: grid;
-        place-items: center;
         color: var(--ink);
-        cursor: pointer;
-        box-shadow: 0 7px 18px rgba(20, 58, 49, 0.08);
+        font-size: 18px;
       }
 
-      .quick-card span {
-        font-size: 12px;
-        font-weight: 700;
-      }
-
-      .quick-card b {
-        color: var(--green);
-        font-size: 14px;
-      }
-
-      .add-screen {
-        padding-top: 4px;
-      }
-
-      .add-hero {
-        text-align: center;
-        padding: 2px 10px 18px;
-      }
-
-      .sprout {
-        font-size: 32px;
-        line-height: 1;
-        animation: sprout 1.9s ease-in-out infinite;
-      }
-
-      .add-hero h2 {
-        margin: 14px 0 8px;
-        font-size: 26px;
-      }
-
-      .add-hero p {
-        margin: 0;
+      .muted {
         color: var(--muted);
-        font-size: 14px;
-      }
-
-      .input-card {
-        padding: 22px 16px 14px;
-      }
-
-      .field-label {
-        display: block;
+        font-size: 13px;
         font-weight: 700;
       }
 
-      .amount-entry {
-        margin-top: 14px;
+      .history-list,
+      .stats-grid,
+      .category-list,
+      .profile-grid {
         display: grid;
-        grid-template-columns: 44px 1fr;
-        align-items: center;
-        border-bottom: 1px solid var(--line);
+        gap: 10px;
       }
 
-      .amount-entry span {
-        color: var(--green-dark);
-        font-size: 34px;
-        font-weight: 800;
+      .record-card {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        padding: 14px 16px;
       }
 
-      .amount-entry input {
-        width: 100%;
-        border: 0;
-        outline: 0;
+      .record-card p {
+        margin: 0;
+        font-weight: 900;
+      }
+
+      .record-card small {
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      .record-card strong {
         color: var(--green);
-        font-size: 58px;
-        line-height: 1;
-        font-weight: 800;
-        text-align: right;
-        background: transparent;
-        font-variant-numeric: tabular-nums;
+        font-size: 18px;
       }
 
-      .amount-entry input::placeholder {
-        color: rgba(11, 141, 103, 0.36);
+      .empty-card {
+        padding: 18px;
+        color: var(--muted);
+        font-weight: 700;
+        line-height: 1.7;
       }
 
-      .shortcut-row,
-      .category-row {
+      .form-card {
+        display: grid;
+        gap: 16px;
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        background: var(--paper);
+        padding: 18px;
+        box-shadow: 0 14px 30px rgba(27, 54, 43, 0.08);
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+      }
+
+      .field label,
+      .category-label {
+        color: var(--green-deep);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid rgba(23, 32, 28, 0.12);
+        border-radius: 18px;
+        background: var(--paper-soft);
+        color: var(--ink);
+        outline: none;
+        padding: 14px 15px;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: rgba(30, 127, 99, 0.45);
+        box-shadow: 0 0 0 4px rgba(30, 127, 99, 0.1);
+      }
+
+      .amount-input {
+        font-size: 34px;
+        font-weight: 950;
+        letter-spacing: 0;
+      }
+
+      textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
+
+      .category-chips {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .shortcut-row {
-        margin: 16px 0 24px;
-      }
-
-      .shortcut-row button {
-        flex: 1 1 72px;
-        min-height: 38px;
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        background: #fdfdfd;
-        color: #38443f;
-        cursor: pointer;
-      }
-
-      .memo-label textarea {
-        width: 100%;
-        min-height: 86px;
-        margin-top: 8px;
-        padding: 12px;
-        resize: none;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        outline: 0;
-        background: #fff;
-      }
-
-      .counter {
-        display: block;
-        margin-top: 6px;
-        text-align: right;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .category-title {
-        margin: 22px 8px 10px;
-        color: #42524c;
-        font-size: 13px;
-        font-weight: 700;
+        gap: 8px;
       }
 
       .category-chip {
-        min-height: 74px;
-        flex: 1 1 88px;
-        display: grid;
-        place-items: center;
-        gap: 3px;
-        border: 1px solid var(--line);
-        border-radius: 18px;
+        border: 1px solid rgba(23, 32, 28, 0.1);
+        border-radius: 999px;
         background: #fff;
-        color: #243a34;
-        cursor: pointer;
-        box-shadow: 0 6px 18px rgba(20, 58, 49, 0.07);
+        color: var(--muted);
+        padding: 10px 13px;
+        font-size: 14px;
+        font-weight: 900;
       }
 
       .category-chip.is-selected {
-        border-color: rgba(11, 141, 103, 0.55);
-        box-shadow: 0 0 0 3px rgba(11, 141, 103, 0.12);
-      }
-
-      .category-chip span {
-        font-size: 12px;
-        font-weight: 700;
-      }
-
-      .save-button {
-        width: 100%;
-        min-height: 62px;
-        margin-top: 28px;
-        border: 0;
-        border-radius: 15px;
+        border-color: transparent;
+        background: var(--green);
         color: #fff;
-        background: linear-gradient(135deg, #19a673, #07845d);
-        box-shadow: 0 12px 26px rgba(8, 132, 93, 0.24);
-        font-size: 22px;
+      }
+
+      .example-box {
+        border-radius: 18px;
+        background: var(--mint);
+        color: var(--green-deep);
+        padding: 12px 14px;
+        font-size: 13px;
         font-weight: 800;
-        cursor: pointer;
+        line-height: 1.6;
       }
 
-      .save-button:disabled {
-        opacity: 0.45;
-      }
-
-      .segment {
+      .inline-form {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0;
-        margin: 2px 0 30px;
-        padding: 4px;
-        border-radius: 14px;
-        background: #edf4f0;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
       }
 
-      .segment button {
-        min-height: 42px;
-        border: 0;
-        border-radius: 11px;
-        background: transparent;
-        color: #5a6762;
-        cursor: pointer;
-      }
-
-      .segment .active {
-        background: #fff;
-        color: var(--green);
-        font-weight: 800;
-        box-shadow: 0 5px 12px rgba(20, 58, 49, 0.12);
-      }
-
-      .chart-title {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        margin-bottom: 24px;
-      }
-
-      .chart-title h2 {
-        margin: 0;
-        font-size: 18px;
-      }
-
-      .chart-title small {
-        color: var(--muted);
-      }
-
-      .chart {
-        height: 292px;
-        display: grid;
-        grid-template-columns: 46px 1fr;
-        gap: 10px;
-      }
-
-      .axis {
-        display: grid;
-        grid-template-rows: repeat(5, 1fr);
-        color: #687671;
-        font-size: 12px;
-      }
-
-      .bars {
-        position: relative;
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        align-items: end;
-        gap: 12px;
-        padding-top: 22px;
-        border-bottom: 1px solid #aab6b0;
-      }
-
-      .bars::before {
-        content: "";
-        position: absolute;
-        inset: 22px 0 0;
-        background: repeating-linear-gradient(to bottom, rgba(20, 58, 49, 0.12), rgba(20, 58, 49, 0.12) 1px, transparent 1px, transparent 61px);
-      }
-
-      .bar {
-        height: 100%;
-        position: relative;
-        display: grid;
-        grid-template-rows: 1fr 48px;
-        justify-items: center;
-      }
-
-      .bar-fill {
-        width: 28px;
-        align-self: end;
-        border-radius: 5px 5px 0 0;
-        background: linear-gradient(180deg, #d7eadf, #b5dec9);
-        animation: grow 800ms ease both;
-        transform-origin: bottom;
-        z-index: 1;
-      }
-
-      .bar.current .bar-fill {
-        background: linear-gradient(180deg, #13986d, #0d765a);
-      }
-
-      .bar-value {
-        position: absolute;
-        top: calc(100% - var(--bar-height) - 22px);
-        transform: translateY(-100%);
-        color: #4d5e57;
-        font-size: 11px;
-        white-space: nowrap;
-        z-index: 2;
-      }
-
-      .bar.current .bar-value {
-        color: var(--green-dark);
-        font-weight: 800;
-      }
-
-      .bar-label {
-        display: grid;
-        place-items: center;
-        color: #56645f;
-        font-size: 12px;
-        text-align: center;
-        line-height: 1.35;
-      }
-
-      .stat-cards {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-top: 28px;
+      .panel {
+        padding: 16px;
       }
 
       .stat-card {
-        min-height: 128px;
+        display: grid;
+        gap: 4px;
+        border-radius: 20px;
+        background: var(--mint);
         padding: 16px;
-        text-align: center;
       }
 
       .stat-card span {
+        color: var(--muted);
+        font-size: 12px;
         font-weight: 800;
       }
 
       .stat-card strong {
-        display: block;
-        margin-top: 12px;
-        color: var(--green-dark);
-        font-size: 28px;
+        color: var(--green-deep);
+        font-size: 24px;
       }
 
-      .stat-card small {
-        display: block;
-        margin-top: 6px;
+      .bar-list {
+        display: grid;
+        gap: 12px;
       }
 
-      .encourage {
-        min-height: 132px;
-        margin-top: 18px;
-        padding: 20px 118px 18px 22px;
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, #eef9f4, #fff);
-      }
-
-      .encourage h3 {
-        margin: 0 0 8px;
-        color: #0f765d;
-        font-size: 16px;
-      }
-
-      .encourage p {
-        margin: 0;
-        color: #596b64;
+      .bar-row {
+        display: grid;
+        grid-template-columns: 82px 1fr 86px;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
         font-size: 13px;
-        line-height: 1.7;
+        font-weight: 800;
       }
 
-      .encourage img {
-        position: absolute;
-        width: 130px;
-        right: -4px;
-        bottom: -20px;
+      .bar-track {
+        height: 16px;
+        border-radius: 999px;
+        background: var(--mint);
+        overflow: hidden;
+      }
+
+      .bar-fill {
+        width: var(--width);
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--green), var(--gold));
+      }
+
+      .profile-card {
+        border-radius: 22px;
+        background: var(--mint);
+        padding: 16px;
+      }
+
+      .profile-card span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .profile-card strong {
+        display: block;
+        margin-top: 4px;
+        color: var(--green-deep);
+        font-size: 22px;
+      }
+
+      .danger-button {
+        width: 100%;
+        border-radius: 18px;
+        background: #fff4ef;
+        color: #9b3f26;
+        padding: 13px 16px;
+        font-weight: 900;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 86px;
+        z-index: 20;
+        width: min(calc(100% - 36px), 460px);
+        transform: translateX(-50%);
+        border-radius: 18px;
+        background: var(--ink);
+        color: #fff;
+        padding: 12px 14px;
+        text-align: center;
+        font-weight: 800;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+
+      .toast.is-visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-6px);
       }
 
       .bottom-nav {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 78px;
+        position: fixed;
+        left: 50%;
+        bottom: 14px;
+        z-index: 10;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        padding: 7px 14px 9px;
-        border-top: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(16px);
+        gap: 4px;
+        width: min(calc(100% - 32px), 488px);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 14px 34px rgba(27, 54, 43, 0.14);
+        padding: 6px;
+        transform: translateX(-50%);
       }
 
-      .tab-button {
-        display: grid;
-        place-items: center;
-        gap: 2px;
-        border: 0;
+      .nav-button {
+        border-radius: 18px;
         background: transparent;
-        color: #68716e;
-        cursor: pointer;
+        color: var(--muted);
+        padding: 10px 4px;
+        font-size: 12px;
+        font-weight: 900;
       }
 
-      .tab-button span {
-        font-size: 11px;
-        font-weight: 700;
+      .nav-button.is-active {
+        background: var(--mint);
+        color: var(--green-deep);
       }
 
-      .tab-button.active {
-        color: var(--green);
-      }
-
-      @keyframes floaty {
-        0%, 100% { transform: translateY(0) rotate(-1deg); }
-        50% { transform: translateY(-8px) rotate(1deg); }
-      }
-
-      @keyframes twinkle {
-        0%, 100% { opacity: 0.35; transform: scale(0.82); }
-        50% { opacity: 1; transform: scale(1.12); }
-      }
-
-      @keyframes rise {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-
-      @keyframes sprout {
-        0%, 100% { transform: translateY(0) scale(1); }
-        50% { transform: translateY(-4px) scale(1.05); }
-      }
-
-      @keyframes grow {
-        from { transform: scaleY(0.2); opacity: 0.5; }
-        to { transform: scaleY(1); opacity: 1; }
-      }
-
-      @media (max-width: 430px) {
-        body {
+      @media (max-width: 420px) {
+        .app {
           padding: 0;
-          background: #fff;
         }
 
-        .phone {
-          width: 100vw;
-          height: 100vh;
-          min-height: 680px;
-          border-radius: 0;
+        .shell {
+          min-height: 100vh;
           border: 0;
+          border-radius: 0;
+        }
+
+        .hero-main {
+          grid-template-columns: 1fr 108px;
+        }
+
+        .mascot-wrap {
+          width: 108px;
+          height: 108px;
+        }
+
+        .mascot {
+          width: 82px;
+          height: 82px;
         }
       }
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div class="app">
+      <div class="shell">
+        <header class="topbar">
+          <div class="brand">
+            <img class="brand-icon" src="./output/imagegen/mascot-trimmed.png" alt="" />
+            <div>
+              <h1 class="brand-title">誤差貯金</h1>
+              <p class="brand-sub">守れたお金を育てる</p>
+            </div>
+          </div>
+          <button class="secondary-button" type="button" data-nav="add">記録</button>
+        </header>
+
+        <section class="screen is-active" id="screen-home" aria-labelledby="home-title">
+          <section class="hero-card">
+            <div class="hero-main">
+              <div>
+                <span class="label">合計貯金額</span>
+                <div class="total-amount" id="home-total">¥0</div>
+                <div class="month-pill" id="home-month">今月 ¥0</div>
+              </div>
+              <div class="mascot-wrap stage-0" id="home-mascot">
+                <img class="mascot" src="./output/imagegen/mascot-trimmed.png" alt="成長するキャラクター" />
+              </div>
+            </div>
+            <div class="stage-text">
+              <span id="stage-name">はじまり</span>
+              <span id="record-count">0件記録</span>
+            </div>
+            <button class="primary-button" type="button" data-nav="add">誤差を記録する</button>
+          </section>
+
+          <div class="section-title">
+            <h2 id="home-title">最近の記録</h2>
+            <span class="muted" id="latest-label">まだ記録はありません</span>
+          </div>
+          <div class="history-list" id="history-list"></div>
+        </section>
+
+        <section class="screen" id="screen-add" aria-labelledby="add-title">
+          <div class="section-title">
+            <h2 id="add-title">誤差を記録</h2>
+            <span class="muted">入力中は画面を固定</span>
+          </div>
+
+          <form class="form-card" id="record-form">
+            <div class="field">
+              <label for="amount-input">使わなかった金額</label>
+              <input
+                class="amount-input"
+                id="amount-input"
+                name="amount"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                placeholder="0"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="field">
+              <span class="category-label">カテゴリ</span>
+              <div class="category-chips" id="category-chips" role="radiogroup" aria-label="カテゴリ"></div>
+              <div class="example-box" id="category-example">カテゴリを選んでください。</div>
+            </div>
+
+            <div class="inline-form">
+              <input id="new-category-input" type="text" placeholder="カテゴリを追加" autocomplete="off" />
+              <button class="secondary-button" type="button" id="add-category-button">追加</button>
+            </div>
+
+            <div class="field">
+              <label for="memo-input">何を使わなかった？</label>
+              <textarea
+                id="memo-input"
+                name="memo"
+                placeholder="例：タクシーを使わず歩けた"
+                autocomplete="off"
+              ></textarea>
+            </div>
+
+            <div class="field">
+              <label for="date-input">日付</label>
+              <input id="date-input" name="date" type="date" />
+            </div>
+
+            <button class="primary-button" type="submit">記録する</button>
+          </form>
+        </section>
+
+        <section class="screen" id="screen-stats" aria-labelledby="stats-title">
+          <div class="section-title">
+            <h2 id="stats-title">統計</h2>
+            <span class="muted">月別・カテゴリ別</span>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span>合計貯金額</span>
+              <strong id="stats-total">¥0</strong>
+            </div>
+            <div class="stat-card">
+              <span>今月守れたお金</span>
+              <strong id="stats-month">¥0</strong>
+            </div>
+          </div>
+
+          <div class="section-title">
+            <h2>月ごとの貯金額</h2>
+          </div>
+          <section class="panel">
+            <div class="bar-list" id="month-bars"></div>
+          </section>
+
+          <div class="section-title">
+            <h2>カテゴリ別の貯金額</h2>
+          </div>
+          <section class="panel">
+            <div class="bar-list" id="category-bars"></div>
+          </section>
+        </section>
+
+        <section class="screen" id="screen-profile" aria-labelledby="profile-title">
+          <div class="section-title">
+            <h2 id="profile-title">マイページ</h2>
+            <span class="muted">保存はこの端末内</span>
+          </div>
+
+          <div class="profile-grid">
+            <div class="profile-card">
+              <span>成長ステージ</span>
+              <strong id="profile-stage">はじまり</strong>
+            </div>
+            <div class="profile-card">
+              <span>記録回数</span>
+              <strong id="profile-count">0件</strong>
+            </div>
+            <div class="profile-card">
+              <span>カテゴリ数</span>
+              <strong id="profile-categories">6個</strong>
+            </div>
+          </div>
+
+          <div class="section-title">
+            <h2>カテゴリ一覧</h2>
+          </div>
+          <section class="panel">
+            <div class="category-list" id="profile-category-list"></div>
+          </section>
+
+          <div class="section-title">
+            <h2>データ</h2>
+          </div>
+          <button class="danger-button" type="button" id="reset-button">記録を0からやり直す</button>
+        </section>
+      </div>
+    </div>
+
+    <nav class="bottom-nav" aria-label="メインナビゲーション">
+      <button class="nav-button is-active" type="button" data-nav="home">ホーム</button>
+      <button class="nav-button" type="button" data-nav="add">記録</button>
+      <button class="nav-button" type="button" data-nav="stats">統計</button>
+      <button class="nav-button" type="button" data-nav="profile">マイ</button>
+    </nav>
+
+    <div class="toast" id="toast" role="status"></div>
 
     <script>
-      const h = (tag, props = {}, ...children) => ({ tag, props, children: children.flat() });
-      const state = {
-        tab: "home",
-        amount: "1280",
-        memo: "タクシーを使わなかった\n渋谷駅 → 恵比寿駅",
-        category: "taxi",
-        records: [
-          { id: 1, category: "taxi", memo: "タクシーを使わなかった", detail: "渋谷駅 → 恵比寿駅", amount: 1280, fresh: false },
-          { id: 2, category: "ramen", memo: "ラーメンの味玉トッピングを我慢", detail: "味玉は次回のお楽しみに", amount: 120, fresh: false },
-          { id: 3, category: "shopping", memo: "セール品を買わなかった", detail: "気になっていたバッグ", amount: 3800, fresh: false },
-          { id: 4, category: "subscription", memo: "サブスクを見直して解約", detail: "使っていなかった音楽アプリ", amount: 980, fresh: false }
-        ]
-      };
-
-      const asset = (file) => "output/imagegen/" + file;
-      const yen = (value) => "¥" + Number(value).toLocaleString("ja-JP");
-      const icons = {
-        menu: "M4 6h16M4 12h16M4 18h16",
-        bell: "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0",
-        back: "M15 18l-6-6 6-6",
-        calendar: "M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z",
-        chevron: "M9 18l6-6-6-6",
-        home: "M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3V10.5Z",
-        plus: "M12 5v14M5 12h14",
-        chart: "M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-9",
-        user: "M20 21a8 8 0 0 0-16 0M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z",
-        up: "M7 17 17 7M8 7h9v9"
-      };
-      const categories = {
-        taxi: { label: "タクシー", tone: "mint", icon: "icon-taxi-trimmed.png", amount: 780, memo: "タクシーを使わず歩いた" },
-        ramen: { label: "ラーメン", tone: "gold", icon: "icon-ramen-trimmed.png", amount: 320, memo: "ラーメンのトッピングを我慢" },
-        shopping: { label: "ショッピング", tone: "rose", icon: "icon-shopping-trimmed.png", amount: 1480, memo: "予定外の買い物を見送った" },
-        subscription: { label: "サブスク", tone: "blue", icon: "icon-subscription-trimmed.png", amount: 980, memo: "使っていないサブスクを停止" }
-      };
-      const nav = [
-        ["home", "ホーム", icons.home],
-        ["add", "記録する", icons.plus],
-        ["stats", "統計", icons.chart],
-        ["mypage", "マイページ", icons.user]
-      ];
-
-      function Icon(path) {
-        return h("svg", { viewBox: "0 0 24 24", "aria-hidden": "true" }, h("path", { d: path }));
-      }
-
-      function CategoryIcon(key) {
-        return h("img", { class: "asset-icon", src: asset(categories[key].icon), alt: "" });
-      }
-
-      function total() {
-        return state.records.reduce((sum, record) => sum + record.amount, 123250);
-      }
-
-      function renderNode(vnode) {
-        if (vnode == null || vnode === false) return document.createTextNode("");
-        if (typeof vnode === "string" || typeof vnode === "number") return document.createTextNode(vnode);
-        const el = document.createElement(vnode.tag);
-        Object.entries(vnode.props || {}).forEach(([key, value]) => {
-          if (key === "class") el.className = value;
-          else if (key === "style" && typeof value === "object") Object.assign(el.style, value);
-          else if (key.startsWith("on") && typeof value === "function") el.addEventListener(key.slice(2).toLowerCase(), value);
-          else if (value !== false && value != null) el.setAttribute(key, value === true ? "" : value);
+      (() => {
+        const recordKey = "gosa-savings-records-v3";
+        const categoryKey = "gosa-savings-categories-v3";
+        const yen = new Intl.NumberFormat("ja-JP", {
+          style: "currency",
+          currency: "JPY",
+          maximumFractionDigits: 0,
         });
-        vnode.children.forEach((child) => el.appendChild(renderNode(child)));
-        return el;
-      }
 
-      function setState(patch) {
-        Object.assign(state, patch);
-        render();
-      }
-
-      function saveRecord(amount, memo, category) {
-        const nextAmount = Number(amount || state.amount);
-        if (!nextAmount) return;
-        const cat = category || state.category;
-        state.records = [
-          { id: Date.now(), category: cat, memo: memo || state.memo.split("\n")[0] || "小さな誤差を貯金", detail: (memo || state.memo).split("\n")[1] || "今日の小さな見送り", amount: nextAmount, fresh: true },
-          ...state.records.map((record) => ({ ...record, fresh: false }))
+        const defaultCategories = [
+          { id: "traffic", name: "交通", example: "タクシーを使わず歩けた" },
+          { id: "food", name: "食事", example: "味玉トッピングを見送った" },
+          { id: "shopping", name: "ショッピング", example: "必要以上の買い物をやめた" },
+          { id: "fixed", name: "固定費見直し", example: "惰性のサブスクを整理した" },
+          { id: "social", name: "交際費", example: "行かなくて良い飲み会を断れた" },
+          { id: "other", name: "その他", example: "なんとなくの出費を見送った" },
         ];
-        state.amount = "";
-        state.memo = "";
-        state.tab = "home";
-        render();
-      }
 
-      function StatusBar() {
-        return h("div", { class: "status" },
-          h("span", null, "9:41"),
-          h("div", { class: "status-icons" },
-            h("span", { class: "signal" }, h("i"), h("i"), h("i")),
-            h("span", { class: "wifi" }),
-            h("span", { class: "battery" })
-          )
-        );
-      }
+        const state = {
+          records: readJson(recordKey, []),
+          categories: mergeCategories(readJson(categoryKey, [])),
+          selectedCategoryId: "traffic",
+          activeScreen: "home",
+        };
 
-      function TopBar() {
-        const title = state.tab === "add" ? "誤差を記録" : state.tab === "stats" ? "統計" : "誤差貯金";
-        const leftIcon = state.tab === "add" ? icons.back : icons.menu;
-        const rightIcon = state.tab === "stats" ? icons.calendar : icons.bell;
-        return h("header", { class: "topbar" },
-          h("button", { class: "icon-button", type: "button", "aria-label": "戻る", onclick: () => setState({ tab: "home" }) }, Icon(leftIcon)),
-          h("h1", null, title),
-          h("button", { class: "icon-button", type: "button", "aria-label": "通知" }, Icon(rightIcon))
-        );
-      }
+        const els = {
+          screens: document.querySelectorAll(".screen"),
+          navButtons: document.querySelectorAll("[data-nav]"),
+          homeTotal: document.getElementById("home-total"),
+          homeMonth: document.getElementById("home-month"),
+          homeMascot: document.getElementById("home-mascot"),
+          stageName: document.getElementById("stage-name"),
+          recordCount: document.getElementById("record-count"),
+          latestLabel: document.getElementById("latest-label"),
+          historyList: document.getElementById("history-list"),
+          recordForm: document.getElementById("record-form"),
+          amountInput: document.getElementById("amount-input"),
+          memoInput: document.getElementById("memo-input"),
+          dateInput: document.getElementById("date-input"),
+          categoryChips: document.getElementById("category-chips"),
+          categoryExample: document.getElementById("category-example"),
+          newCategoryInput: document.getElementById("new-category-input"),
+          addCategoryButton: document.getElementById("add-category-button"),
+          statsTotal: document.getElementById("stats-total"),
+          statsMonth: document.getElementById("stats-month"),
+          monthBars: document.getElementById("month-bars"),
+          categoryBars: document.getElementById("category-bars"),
+          profileStage: document.getElementById("profile-stage"),
+          profileCount: document.getElementById("profile-count"),
+          profileCategories: document.getElementById("profile-categories"),
+          profileCategoryList: document.getElementById("profile-category-list"),
+          resetButton: document.getElementById("reset-button"),
+          toast: document.getElementById("toast"),
+        };
 
-      function Home() {
-        const quicks = ["taxi", "ramen", "subscription"];
-        return h("section", { class: "screen " + (state.tab === "home" ? "active" : "") },
-          h("section", { class: "card balance-card" },
-            h("div", null,
-              h("span", { class: "eyebrow" }, "合計貯金額", h("span", { class: "info-dot" }, "i")),
-              h("strong", { class: "big-money" }, yen(total())),
-              h("span", { class: "pill" }, "先月比 +¥12,830", Icon(icons.up))
-            ),
-            h("div", { class: "mascot-wrap" },
-              h("span", { class: "sparkle one" }, "✦"),
-              h("img", { class: "mascot", src: asset("mascot-trimmed.png"), alt: "誤差貯金のマスコット" }),
-              h("span", { class: "sparkle two" }, "✦")
-            )
-          ),
-          h("section", { class: "card month-card" },
-            h("div", null,
-              h("span", { class: "label" }, "今月守れたお金"),
-              h("strong", null, "¥18,760"),
-              h("small", null, "月の目標 ¥20,000")
-            ),
-            h("div", { class: "ring" }, h("span", null, "93%")),
-            h("button", { class: "chevron", type: "button", onclick: () => setState({ tab: "stats" }) }, Icon(icons.chevron))
-          ),
-          h("div", { class: "quick-row" }, quicks.map((key) =>
-            h("button", { class: "quick-card", type: "button", onclick: () => saveRecord(categories[key].amount, categories[key].memo, key) },
-              CategoryIcon(key), h("span", null, categories[key].label), h("b", null, yen(categories[key].amount))
-            )
-          )),
-          h("div", { class: "section-row" },
-            h("h2", null, "履歴"),
-            h("button", { class: "text-link", type: "button", onclick: () => setState({ tab: "add" }) }, "すべて見る", Icon(icons.chevron))
-          ),
-          h("section", { class: "card history" }, state.records.slice(0, 4).map((record) => HistoryItem(record)))
-        );
-      }
+        els.dateInput.value = new Date().toISOString().slice(0, 10);
+        renderCategoryChips();
+        renderAll();
+        bindEvents();
 
-      function HistoryItem(record) {
-        const cat = categories[record.category] || categories.shopping;
-        return h("article", { class: "history-item", style: { animationDelay: record.fresh ? "0ms" : "80ms" } },
-          h("div", { class: "history-icon tone-" + cat.tone }, CategoryIcon(record.category)),
-          h("div", { class: "history-body" }, h("p", null, record.memo), h("small", null, record.detail)),
-          h("strong", { class: "amount-plus" }, "+" + yen(record.amount)),
-          h("button", { class: "chevron", type: "button", "aria-label": "詳細" }, Icon(icons.chevron))
-        );
-      }
+        if ("serviceWorker" in navigator && location.protocol !== "file:") {
+          window.addEventListener("load", () => {
+            navigator.serviceWorker.register("./sw.js").catch(() => {});
+          });
+        }
 
-      function Add() {
-        return h("section", { class: "screen add-screen " + (state.tab === "add" ? "active" : "") },
-          h("div", { class: "add-hero" },
-            h("div", { class: "sprout" }, "🌱"),
-            h("h2", null, "誤差を記録"),
-            h("p", null, "守れたお金を記録して、未来の自分を応援しよう")
-          ),
-          h("section", { class: "card input-card" },
-            h("label", { class: "field-label" }, "使わなかった金額",
-              h("div", { class: "amount-entry" },
-                h("span", null, "¥"),
-                h("input", { type: "number", min: "1", inputmode: "numeric", placeholder: "0", value: state.amount, oninput: (event) => setState({ amount: event.target.value }) })
-              )
-            ),
-            h("div", { class: "shortcut-row" }, [100, 500, 1000, 5000].map((value) =>
-              h("button", { type: "button", onclick: () => setState({ amount: String(value) }) }, "+" + value.toLocaleString("ja-JP"))
-            )),
-            h("label", { class: "field-label memo-label" }, "メモ",
-              h("textarea", { maxlength: "100", rows: "4", placeholder: "タクシーを使わなかった\n渋谷駅 → 恵比寿駅", oninput: (event) => setState({ memo: event.target.value }) }, state.memo)
-            ),
-            h("span", { class: "counter" }, state.memo.length + "/100")
-          ),
-          h("p", { class: "category-title" }, "カテゴリを選ぶ（任意）"),
-          h("div", { class: "category-row" }, Object.keys(categories).map((key) =>
-            h("button", { class: "category-chip " + (state.category === key ? "is-selected" : ""), type: "button", onclick: () => setState({ category: key, amount: String(categories[key].amount), memo: categories[key].memo }) },
-              CategoryIcon(key), h("span", null, categories[key].label)
-            )
-          )),
-          h("button", { class: "save-button", type: "button", disabled: Number(state.amount) ? null : true, onclick: () => saveRecord() }, "記録する")
-        );
-      }
+        function bindEvents() {
+          els.navButtons.forEach((button) => {
+            button.addEventListener("click", () => navigate(button.dataset.nav));
+          });
 
-      function Stats() {
-        const months = [
-          ["12月", "2025", 12450],
-          ["1月", "2026", 16380],
-          ["2月", "2026", 18920],
-          ["3月", "2026", 28460],
-          ["4月", "2026", 22130],
-          ["5月", "2026", 18760]
-        ];
-        const max = 40000;
-        return h("section", { class: "screen " + (state.tab === "stats" ? "active" : "") },
-          h("div", { class: "segment" }, h("button", { class: "active", type: "button" }, "月ごとのグラフ"), h("button", { type: "button" }, "年間のまとめ")),
-          h("section", null,
-            h("div", { class: "chart-title" }, h("h2", null, "月ごとのグラフ"), h("small", null, "（単位：円）")),
-            h("div", { class: "chart" },
-              h("div", { class: "axis" }, ["40,000", "30,000", "20,000", "10,000", "0"].map((label) => h("span", null, label))),
-              h("div", { class: "bars" }, months.map((month, index) => {
-                const height = Math.round((month[2] / max) * 100);
-                return h("div", { class: "bar " + (index === months.length - 1 ? "current" : ""), style: { "--bar-height": height + "%" } },
-                  h("span", { class: "bar-value" }, month[2].toLocaleString("ja-JP")),
-                  h("div", { class: "bar-fill", style: { height: height + "%" } }),
-                  h("span", { class: "bar-label" }, month[0], h("br"), month[1])
-                );
-              }))
-            )
-          ),
-          h("div", { class: "stat-cards" },
-            h("section", { class: "card stat-card" }, h("span", null, "月間平均 ", h("span", { class: "info-dot" }, "i")), h("strong", null, "¥19,183")),
-            h("section", { class: "card stat-card" }, h("span", null, "ベスト月 👑"), h("strong", null, "¥28,460"), h("small", null, "2026年3月"))
-          ),
-          h("section", { class: "card encourage" },
-            h("h3", null, "コツコツが、大きなチカラに。"),
-            h("p", null, "無理なく続けているあなたは、ちゃんと未来を育てています。"),
-            h("img", { src: asset("mascot-trimmed.png"), alt: "" })
-          )
-        );
-      }
+          els.recordForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            saveRecord();
+          });
 
-      function BottomNav() {
-        return h("nav", { class: "bottom-nav", "aria-label": "メインナビゲーション" }, nav.map(([key, label, path]) =>
-          h("button", { class: "tab-button " + (state.tab === key ? "active" : ""), type: "button", onclick: () => key !== "mypage" && setState({ tab: key }) },
-            Icon(path), h("span", null, label)
-          )
-        ));
-      }
+          els.addCategoryButton.addEventListener("click", addCategory);
+          els.newCategoryInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              addCategory();
+            }
+          });
 
-      function App() {
-        return h("main", { class: "phone" },
-          h("div", { class: "app" },
-            StatusBar(),
-            TopBar(),
-            h("div", { class: "screens" }, Home(), Add(), Stats()),
-            BottomNav()
-          )
-        );
-      }
+          els.resetButton.addEventListener("click", () => {
+            if (!confirm("保存した記録を削除して0から始めますか？")) return;
+            state.records = [];
+            localStorage.setItem(recordKey, JSON.stringify(state.records));
+            renderAll();
+            showToast("記録をリセットしました");
+            navigate("home");
+          });
+        }
 
-      function render() {
-        const root = document.getElementById("root");
-        root.replaceChildren(renderNode(App()));
-      }
+        function navigate(screenName) {
+          state.activeScreen = screenName;
+          els.screens.forEach((screen) => {
+            screen.classList.toggle("is-active", screen.id === `screen-${screenName}`);
+          });
+          document.querySelectorAll(".nav-button").forEach((button) => {
+            button.classList.toggle("is-active", button.dataset.nav === screenName);
+          });
+          if (screenName === "add") {
+            setTimeout(() => els.amountInput.focus({ preventScroll: true }), 120);
+          }
+        }
 
-      render();
+        function saveRecord() {
+          const amount = Number(els.amountInput.value);
+          const category = getSelectedCategory();
+          const memo = els.memoInput.value.trim() || category.example;
+          const date = els.dateInput.value || new Date().toISOString().slice(0, 10);
+
+          if (!amount || amount < 1) {
+            showToast("金額を入力してください");
+            els.amountInput.focus({ preventScroll: true });
+            return;
+          }
+
+          const nextRecord = {
+            id: `record-${Date.now()}`,
+            amount,
+            categoryId: category.id,
+            categoryName: category.name,
+            memo,
+            date,
+          };
+
+          state.records.unshift(nextRecord);
+          localStorage.setItem(recordKey, JSON.stringify(state.records));
+
+          els.amountInput.value = "";
+          els.memoInput.value = "";
+          els.dateInput.value = new Date().toISOString().slice(0, 10);
+
+          renderAll();
+          showToast("誤差を記録しました");
+          navigate("home");
+        }
+
+        function addCategory() {
+          const name = els.newCategoryInput.value.trim();
+          if (!name) {
+            showToast("追加するカテゴリ名を入力してください");
+            els.newCategoryInput.focus({ preventScroll: true });
+            return;
+          }
+
+          const exists = state.categories.some((category) => category.name === name);
+          if (exists) {
+            showToast("同じカテゴリがすでにあります");
+            return;
+          }
+
+          const category = {
+            id: `custom-${Date.now()}`,
+            name,
+            example: `${name}の出費を見送った`,
+            custom: true,
+          };
+          state.categories.push(category);
+          state.selectedCategoryId = category.id;
+          localStorage.setItem(categoryKey, JSON.stringify(state.categories.filter((item) => item.custom)));
+          els.newCategoryInput.value = "";
+          renderCategoryChips();
+          renderAll();
+          showToast("カテゴリを追加しました");
+        }
+
+        function renderAll() {
+          const stats = getStats();
+          const stage = getStage(stats.total);
+          renderHome(stats, stage);
+          renderHistory();
+          renderStats(stats);
+          renderProfile(stats, stage);
+        }
+
+        function renderHome(stats, stage) {
+          els.homeTotal.textContent = yen.format(stats.total);
+          els.homeMonth.textContent = `今月 ${yen.format(stats.currentMonth)}`;
+          els.homeMascot.className = `mascot-wrap stage-${stage.level}`;
+          els.stageName.textContent = stage.name;
+          els.recordCount.textContent = `${state.records.length}件記録`;
+          els.latestLabel.textContent = state.records.length ? "直近5件" : "まだ記録はありません";
+        }
+
+        function renderHistory() {
+          if (!state.records.length) {
+            els.historyList.innerHTML = `<div class="empty-card">まだ記録はありません。大きなボタンから、今日守れたお金を記録しましょう。</div>`;
+            return;
+          }
+
+          els.historyList.innerHTML = state.records
+            .slice(0, 5)
+            .map((record) => {
+              return `
+                <article class="record-card">
+                  <div>
+                    <p>${escapeHtml(record.memo)}</p>
+                    <small>${escapeHtml(record.categoryName)}・${escapeHtml(record.date)}</small>
+                  </div>
+                  <strong>+${yen.format(record.amount)}</strong>
+                </article>
+              `;
+            })
+            .join("");
+        }
+
+        function renderStats(stats) {
+          els.statsTotal.textContent = yen.format(stats.total);
+          els.statsMonth.textContent = yen.format(stats.currentMonth);
+          renderBars(els.monthBars, stats.byMonth, "まだ月別データはありません");
+          renderBars(els.categoryBars, stats.byCategory, "まだカテゴリ別データはありません");
+        }
+
+        function renderProfile(stats, stage) {
+          els.profileStage.textContent = stage.name;
+          els.profileCount.textContent = `${state.records.length}件`;
+          els.profileCategories.textContent = `${state.categories.length}個`;
+          els.profileCategoryList.innerHTML = state.categories
+            .map((category) => {
+              return `
+                <div class="record-card">
+                  <div>
+                    <p>${escapeHtml(category.name)}</p>
+                    <small>${escapeHtml(category.example)}</small>
+                  </div>
+                  <strong>${category.custom ? "追加" : "標準"}</strong>
+                </div>
+              `;
+            })
+            .join("");
+        }
+
+        function renderBars(container, rows, emptyText) {
+          if (!rows.length) {
+            container.innerHTML = `<div class="empty-card">${emptyText}</div>`;
+            return;
+          }
+          const max = Math.max(...rows.map((row) => row.amount), 1);
+          container.innerHTML = rows
+            .map((row) => {
+              const width = Math.max(8, Math.round((row.amount / max) * 100));
+              return `
+                <div class="bar-row">
+                  <span>${escapeHtml(row.label)}</span>
+                  <div class="bar-track"><div class="bar-fill" style="--width: ${width}%"></div></div>
+                  <strong>${yen.format(row.amount)}</strong>
+                </div>
+              `;
+            })
+            .join("");
+        }
+
+        function renderCategoryChips() {
+          els.categoryChips.innerHTML = state.categories
+            .map((category) => {
+              const selected = category.id === state.selectedCategoryId ? " is-selected" : "";
+              return `<button class="category-chip${selected}" type="button" data-category-id="${category.id}" role="radio" aria-checked="${selected ? "true" : "false"}">${escapeHtml(category.name)}</button>`;
+            })
+            .join("");
+
+          els.categoryChips.querySelectorAll("[data-category-id]").forEach((button) => {
+            button.addEventListener("click", () => {
+              state.selectedCategoryId = button.dataset.categoryId;
+              els.categoryChips.querySelectorAll(".category-chip").forEach((chip) => {
+                const selected = chip.dataset.categoryId === state.selectedCategoryId;
+                chip.classList.toggle("is-selected", selected);
+                chip.setAttribute("aria-checked", selected ? "true" : "false");
+              });
+              const category = getSelectedCategory();
+              els.categoryExample.textContent = `例: ${category.example}`;
+              if (!els.memoInput.value.trim()) {
+                els.memoInput.placeholder = `例: ${category.example}`;
+              }
+            });
+          });
+
+          const category = getSelectedCategory();
+          els.categoryExample.textContent = `例: ${category.example}`;
+          els.memoInput.placeholder = `例: ${category.example}`;
+        }
+
+        function getStats() {
+          const total = state.records.reduce((sum, record) => sum + Number(record.amount), 0);
+          const nowMonth = new Date().toISOString().slice(0, 7);
+          const currentMonth = state.records
+            .filter((record) => record.date.slice(0, 7) === nowMonth)
+            .reduce((sum, record) => sum + Number(record.amount), 0);
+          const monthMap = new Map();
+          const categoryMap = new Map();
+
+          state.records.forEach((record) => {
+            const month = record.date.slice(0, 7);
+            monthMap.set(month, (monthMap.get(month) || 0) + Number(record.amount));
+            categoryMap.set(record.categoryName, (categoryMap.get(record.categoryName) || 0) + Number(record.amount));
+          });
+
+          const byMonth = [...monthMap.entries()]
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([label, amount]) => ({ label: `${Number(label.slice(5))}月`, amount }));
+          const byCategory = [...categoryMap.entries()]
+            .sort((a, b) => b[1] - a[1])
+            .map(([label, amount]) => ({ label, amount }));
+
+          return { total, currentMonth, byMonth, byCategory };
+        }
+
+        function getStage(total) {
+          if (total < 10) return { level: 0, name: "はじまり" };
+          if (total < 100) return { level: 1, name: "小さな芽" };
+          if (total < 1000) return { level: 2, name: "若葉" };
+          if (total < 10000) return { level: 3, name: "花ひらく" };
+          if (total < 100000) return { level: 4, name: "金の鉢" };
+          return { level: 5, name: "王冠の貯金樹" };
+        }
+
+        function getSelectedCategory() {
+          return state.categories.find((category) => category.id === state.selectedCategoryId) || state.categories[0];
+        }
+
+        function mergeCategories(customCategories) {
+          const cleanCustom = Array.isArray(customCategories) ? customCategories.filter((item) => item && item.name) : [];
+          return [...defaultCategories, ...cleanCustom];
+        }
+
+        function readJson(key, fallback) {
+          try {
+            const value = JSON.parse(localStorage.getItem(key) || "null");
+            return value ?? fallback;
+          } catch {
+            return fallback;
+          }
+        }
+
+        function showToast(message) {
+          els.toast.textContent = message;
+          els.toast.classList.add("is-visible");
+          window.clearTimeout(showToast.timer);
+          showToast.timer = window.setTimeout(() => {
+            els.toast.classList.remove("is-visible");
+          }, 2200);
+        }
+
+        function escapeHtml(value) {
+          return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        }
+      })();
     </script>
   </body>
 </html>
