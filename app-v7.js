@@ -2,6 +2,9 @@
   const recordKey = "gosa-savings-records-v7";
   const categoryKey = "gosa-savings-categories-v7";
   const goalKey = "gosa-savings-goal-v7";
+  const stableRecordKey = "gosa-savings-records";
+  const stableCategoryKey = "gosa-savings-categories";
+  const stableGoalKey = "gosa-savings-goal";
   const yen = new Intl.NumberFormat("ja-JP", {
     style: "currency",
     currency: "JPY",
@@ -27,28 +30,21 @@
   ];
 
   const state = {
-    records: readJson(recordKey, []),
+    records: readJsonFromKeys([stableRecordKey, recordKey], []),
     categories: readCategories(),
-    goal: readJson(goalKey, null),
+    goal: readJsonFromKeys([stableGoalKey, goalKey], null),
     selectedCategoryId: "traffic",
     recordMode: "saved",
     editingRecordId: null,
   };
 
+  saveRecords();
+  saveCategories();
+  if (state.goal) saveGoalState();
+
   document.body.innerHTML = `
     <div class="v7-app">
       <div class="v7-shell">
-        <header class="v7-topbar">
-          <div class="v7-brand">
-            <img class="v7-brand-icon" src="./output/imagegen/mascot-stage-0.png" alt="" />
-            <div>
-              <h1>誤差貯金</h1>
-              <p>守れたお金を育てる</p>
-            </div>
-          </div>
-          <button class="v7-small-button" type="button" data-nav="add" data-start-mode="saved">記録</button>
-        </header>
-
         <main>
           <section class="v7-screen is-active" id="v7-home">
             <section class="v7-hero">
@@ -136,7 +132,6 @@
               <img id="v7-profile-mascot" src="./output/imagegen/mascot-stage-0.png" alt="現在のキャラクター" />
               <div>
                 <span class="v7-label">現在のキャラクター</span>
-                <p>金額の桁が変わるたび、見た目が豪華になります。</p>
               </div>
             </section>
             <div class="v7-stats-grid v7-profile-stats">
@@ -172,15 +167,16 @@
     :root { color-scheme: light; --bg:#f5f6f3; --paper:#fff; --mint:#edf5f1; --ink:#17201c; --muted:#78817b; --line:rgba(23,32,28,.1); --green:#1e7f63; --deep:#10634c; --gold:#d8a437; --bad:#8e2f2f; --bad-bg:#fff0ed; --font-family:"Hiragino Sans","Yu Gothic UI","Yu Gothic","Noto Sans JP",system-ui,sans-serif; font-family:var(--font-family); }
     *{box-sizing:border-box} body{margin:0;min-width:320px;background:linear-gradient(145deg,#fbfbf3,#eef6f1);color:var(--ink);font-family:var(--font-family)}
     button,input,textarea{font:inherit} button{border:0;cursor:pointer} .v7-app{width:min(100%,520px);min-height:100vh;margin:0 auto;padding:14px 14px 96px}.v7-shell{min-height:calc(100vh - 110px);border:1px solid var(--line);border-radius:32px;background:rgba(255,255,255,.95);box-shadow:0 18px 50px rgba(27,54,43,.12);overflow:hidden}
-    .v7-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,var(--mint),#fff)}.v7-brand{display:flex;align-items:center;gap:12px}.v7-brand-icon{width:44px;height:44px;border-radius:14px;object-fit:cover}.v7-brand h1{margin:0;color:var(--deep);font-size:22px}.v7-brand p{margin:2px 0 0;color:var(--muted);font-size:12px;font-weight:800}
     .v7-screen{display:none;padding:18px 18px 108px}.v7-screen.is-active{display:block}.v7-hero,.v7-form,.v7-panel,.v7-goal,.v7-profile-hero{border:1px solid var(--line);border-radius:26px;background:var(--paper);box-shadow:0 12px 28px rgba(27,54,43,.08);padding:18px}.v7-hero{display:grid;grid-template-columns:1fr 132px;gap:16px;background:linear-gradient(145deg,var(--mint),#fff 72%)}.v7-label{color:var(--deep);font-size:13px;font-weight:900}.v7-total{margin-top:4px;font-size:52px;font-weight:950;letter-spacing:0}.v7-pill{display:inline-flex;margin-top:10px;border-radius:999px;background:var(--green);color:#fff;padding:8px 13px;font-weight:900}.v7-mascot{width:132px;height:132px;border-radius:30px;object-fit:cover;background:var(--mint)}
     .v7-action-grid{grid-column:1/-1;display:grid;gap:10px}.v7-primary,.v7-bad,.v7-small-button,.v7-reset,.v7-shine{width:100%;border-radius:20px;padding:14px 16px;font-weight:950}.v7-primary{background:var(--green);color:#fff;box-shadow:0 14px 28px rgba(30,127,99,.2)}.v7-bad{background:linear-gradient(135deg,#522,#9d3d35);color:#fff;box-shadow:0 14px 28px rgba(142,47,47,.18)}.v7-small-button{background:var(--mint);color:var(--deep)}.v7-shine{background:linear-gradient(135deg,#f7d875,#d8a437,#fff0a8);color:#4c3500;box-shadow:0 16px 32px rgba(216,164,55,.28)}.v7-reset{background:#fff0ed;color:#9b352b}
     .v7-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}.v7-section-title h2{margin:0;font-size:18px}.v7-section-title span{color:var(--muted);font-size:13px;font-weight:800}.compact{margin:0}.v7-list,.v7-bars{display:grid;gap:10px}.v7-record,.v7-category-row,.v7-item{display:grid;gap:10px;border:1px solid var(--line);border-radius:20px;background:#fff;padding:14px}.v7-record-top{display:flex;justify-content:space-between;gap:12px}.v7-record p{margin:0;font-weight:900}.v7-record small,.v7-item small{color:var(--muted);font-weight:800}.v7-positive{color:var(--green)}.v7-negative{color:var(--bad)}.v7-card-actions{display:flex;gap:8px}.v7-mini{border-radius:999px;background:var(--mint);color:var(--deep);padding:8px 12px;font-size:12px;font-weight:900}.v7-mini.danger{background:var(--bad-bg);color:var(--bad)}
     .v7-field{display:grid;gap:8px}.v7-field span{color:var(--deep);font-size:13px;font-weight:900} input,textarea{width:100%;border:1px solid rgba(23,32,28,.12);border-radius:18px;background:#fbfcf9;color:var(--ink);outline:0;padding:14px 15px} input:focus,textarea:focus{border-color:rgba(30,127,99,.45);box-shadow:0 0 0 4px rgba(30,127,99,.1)} textarea{min-height:92px;resize:vertical}.v7-amount-input{font-size:34px;font-weight:950}.v7-form{display:grid;gap:14px}.v7-mode-row,.v7-inline{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v7-mode{border-radius:18px;background:var(--mint);color:var(--deep);padding:12px;font-weight:900}.v7-mode.is-active{background:var(--green);color:#fff}.v7-mode.is-danger.is-active{background:var(--bad)}.v7-chips{display:flex;flex-wrap:wrap;gap:8px}.v7-chip{border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);padding:10px 12px;font-size:14px;font-weight:900}.v7-chip.is-active{background:var(--green);color:#fff}.v7-example{margin:0;border-radius:16px;background:var(--mint);color:var(--deep);padding:11px 12px;font-size:13px;font-weight:800}
     .v7-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v7-stat{border-radius:20px;background:var(--mint);padding:14px}.v7-stat span{display:block;color:var(--muted);font-size:12px;font-weight:800}.v7-stat strong{font-size:22px;color:var(--deep)}.v7-red-stat strong{color:var(--bad)}.v7-bar{display:grid;grid-template-columns:86px 1fr 86px;gap:8px;align-items:center;font-size:13px;font-weight:800;color:var(--muted)}.v7-track{height:14px;border-radius:999px;background:var(--mint);overflow:hidden}.v7-fill{height:100%;width:var(--w);border-radius:999px;background:linear-gradient(90deg,var(--green),var(--gold))}.v7-fill.neg{background:linear-gradient(90deg,#c75b4a,var(--bad))}
-    .v7-goal{display:grid;gap:10px;margin-top:14px}.v7-goal h2,.v7-milestones h2{margin:0;font-size:17px}.v7-next-stage{margin-top:8px;color:var(--muted);font-size:12px;font-weight:900}.v7-progress{height:14px;border-radius:999px;background:var(--mint);overflow:hidden}.v7-progress div{height:100%;width:var(--w);background:linear-gradient(90deg,var(--green),var(--gold))}.v7-milestones{display:grid;gap:10px;margin-top:16px}.v7-item{grid-template-columns:1fr auto}.v7-item.reached{background:linear-gradient(135deg,#fff,var(--mint))}.v7-profile-hero{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:14px}.v7-profile-hero img{width:110px;height:110px;border-radius:28px;object-fit:cover;background:var(--mint)}.v7-profile-stats{margin-top:12px}.v7-hidden{display:none!important}
+    .v7-goal{display:grid;gap:10px;margin-top:14px}.v7-goal h2,.v7-milestones h2{margin:0;font-size:17px}.v7-next-stage{margin-top:8px;color:var(--muted);font-size:12px;font-weight:900}.v7-progress{height:14px;border-radius:999px;background:var(--mint);overflow:hidden}.v7-progress div{height:100%;width:var(--w);background:linear-gradient(90deg,var(--green),var(--gold))}.v7-milestones{display:grid;gap:10px;margin-top:16px}.v7-item{grid-template-columns:1fr auto;align-items:center}.v7-item.reached{background:linear-gradient(135deg,#fff,var(--mint))}.v7-profile-hero{display:grid;grid-template-columns:150px 1fr;align-items:center;gap:10px}.v7-profile-hero img{width:150px;height:150px;border-radius:24px;object-fit:contain;background:var(--mint);padding:4px}.v7-profile-stats{margin-top:12px}.v7-hidden{display:none!important}
     .v7-nav{position:fixed;left:50%;bottom:14px;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;width:min(calc(100% - 32px),488px);padding:6px;border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.95);box-shadow:0 14px 34px rgba(27,54,43,.14);transform:translateX(-50%)}.v7-nav button{border-radius:18px;background:transparent;color:var(--muted);padding:10px 4px;font-size:12px;font-weight:900}.v7-nav button.is-active{background:var(--mint);color:var(--deep)}.v7-toast{position:fixed;left:50%;bottom:86px;z-index:30;width:min(calc(100% - 36px),460px);border-radius:18px;background:var(--ink);color:#fff;padding:12px 14px;text-align:center;font-weight:900;opacity:0;pointer-events:none;transform:translateX(-50%);transition:.2s}.v7-toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
-    @media(max-width:420px){.v7-app{padding:0 0 86px}.v7-shell{border:0;border-radius:0;min-height:100vh}.v7-hero{grid-template-columns:1fr 112px}.v7-mascot{width:112px;height:112px}.v7-total{font-size:46px}}
+    .v7-mascot{object-fit:contain;padding:4px}
+    @media(min-width:421px){.v7-hero{grid-template-columns:1fr 156px}.v7-mascot{width:156px;height:156px}}
+    @media(max-width:420px){.v7-app{padding:0 0 86px}.v7-shell{border:0;border-radius:0;min-height:100vh}.v7-hero{grid-template-columns:1fr 132px}.v7-mascot{width:132px;height:132px}.v7-total{font-size:46px}.v7-profile-hero{grid-template-columns:132px 1fr}.v7-profile-hero img{width:132px;height:132px}}
   `;
   document.head.appendChild(style);
 
@@ -268,7 +264,7 @@
     els.reset.addEventListener("click", () => {
       if (!confirm("記録をすべて削除して0から始めますか？")) return;
       state.records = [];
-      localStorage.setItem(recordKey, JSON.stringify(state.records));
+      saveRecords();
       render();
       toast("0から始めます");
     });
@@ -324,7 +320,7 @@
       state.records.unshift(data);
       toast(data.type === "spent" ? "使ってしまった分を記録しました" : "誤差を記録しました");
     }
-    localStorage.setItem(recordKey, JSON.stringify(state.records));
+    saveRecords();
     clearEdit();
     render();
     navigate("home");
@@ -337,7 +333,7 @@
     if (button.dataset.recordAction === "delete") {
       if (!confirm("この記録を削除しますか？")) return;
       state.records = state.records.filter((record) => record.id !== id);
-      localStorage.setItem(recordKey, JSON.stringify(state.records));
+      saveRecords();
       render();
       toast("記録を削除しました");
       return;
@@ -409,7 +405,7 @@
         if (record.categoryId === id) record.categoryName = category.name;
       });
       saveCategories();
-      localStorage.setItem(recordKey, JSON.stringify(state.records));
+      saveRecords();
       renderChips();
       render();
       toast("カテゴリを更新しました");
@@ -430,7 +426,7 @@
     state.categories = state.categories.filter((item) => item.id !== id);
     state.selectedCategoryId = fallback.id;
     saveCategories();
-    localStorage.setItem(recordKey, JSON.stringify(state.records));
+    saveRecords();
     renderChips();
     render();
     toast("カテゴリを削除しました");
@@ -444,7 +440,7 @@
       return;
     }
     state.goal = { name, amount };
-    localStorage.setItem(goalKey, JSON.stringify(state.goal));
+    saveGoalState();
     els.goalName.value = "";
     els.goalAmount.value = "";
     render();
@@ -453,7 +449,7 @@
 
   function clearGoal() {
     state.goal = null;
-    localStorage.removeItem(goalKey);
+    removeStored([stableGoalKey, goalKey]);
     render();
     toast("目標を削除しました");
   }
@@ -472,7 +468,7 @@
       date: today(),
       completedAt: new Date().toISOString(),
     });
-    localStorage.setItem(recordKey, JSON.stringify(state.records));
+    saveRecords();
     clearGoal();
     toast("目標達成！気持ちよく使いました");
   }
@@ -550,20 +546,32 @@
 
   function renderMilestones(total) {
     els.milestones.innerHTML = `
-      <h2>貯まった金額で買えるもの</h2>
-      ${milestones.map((item) => {
+      <h2>いま一番近いもの</h2>
+      ${[getCurrentMilestone(total)].map((item) => {
         const reached = total >= item.amount;
+        const remaining = Math.max(0, item.amount - total);
         return `
           <div class="v7-item ${reached ? "reached" : ""}">
             <div>
               <strong>${escapeHtml(item.name)}</strong><br />
               <small>${escapeHtml(item.note)}</small>
             </div>
-            <strong>${reached ? "到達" : yen.format(item.amount)}</strong>
+            <strong>${reached ? "到達済み" : `あと ${yen.format(remaining)}`}</strong>
           </div>
         `;
       }).join("")}
     `;
+  }
+
+  function getCurrentMilestone(total) {
+    const value = Math.max(0, total);
+    return milestones.reduce((best, item) => {
+      const bestDiff = Math.abs(best.amount - value);
+      const itemDiff = Math.abs(item.amount - value);
+      if (itemDiff < bestDiff) return item;
+      if (itemDiff === bestDiff && item.amount > best.amount) return item;
+      return best;
+    }, milestones[0]);
   }
 
   function renderCategories() {
@@ -675,13 +683,38 @@
   }
 
   function readCategories() {
-    const saved = readJson(categoryKey, null);
+    const saved = readJsonFromKeys([stableCategoryKey, categoryKey], null);
     if (Array.isArray(saved) && saved.length) return saved;
     return defaultCategories;
   }
 
+  function saveRecords() {
+    saveJson([stableRecordKey, recordKey], state.records);
+  }
+
   function saveCategories() {
-    localStorage.setItem(categoryKey, JSON.stringify(state.categories));
+    saveJson([stableCategoryKey, categoryKey], state.categories);
+  }
+
+  function saveGoalState() {
+    saveJson([stableGoalKey, goalKey], state.goal);
+  }
+
+  function saveJson(keys, value) {
+    const json = JSON.stringify(value);
+    keys.forEach((key) => localStorage.setItem(key, json));
+  }
+
+  function removeStored(keys) {
+    keys.forEach((key) => localStorage.removeItem(key));
+  }
+
+  function readJsonFromKeys(keys, fallback) {
+    for (const key of keys) {
+      const value = readJson(key, null);
+      if (value !== null) return value;
+    }
+    return fallback;
   }
 
   function readJson(key, fallback) {

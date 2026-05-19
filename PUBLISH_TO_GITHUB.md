@@ -31,22 +31,22 @@ https://bonjouryamada.github.io/gosa-savings/
 古いPWAキャッシュが残っていると、アップロード後も前の画面や白い画面が出ることがあります。その場合は、URLの最後に確認用の番号を付けて開きます。
 
 ```text
-https://bonjouryamada.github.io/gosa-savings/?v=最新版番号
+https://bonjouryamada.github.io/gosa-savings/?v=8
 ```
 
-例:
+今回はv8公開なので、確認URLは次を使います。
 
 ```text
-https://bonjouryamada.github.io/gosa-savings/?v=7
+https://bonjouryamada.github.io/gosa-savings/?v=8
 ```
 
-番号は、公開するたびに前回と違う数字にします。
+次の公開でv9にする場合は、最後の数字を `?v=9` のように前回と違う数字にします。
 
 ## まだ古い画面が出る場合
 
 - PCではシークレットウィンドウで開く。
 - スマホでは別のブラウザで一度開く。
-- URLに `?v=最新版番号` を付けて開く。
+- URLに `?v=8` を付けて開く。
 - ブラウザのキャッシュを削除する。
 - ホーム画面に追加済みの古いPWAは、一度削除してから追加し直す。
 
@@ -78,3 +78,4 @@ https://bonjouryamada.github.io/gosa-savings/?v=7
 - 「使ってしまった」ボタンが使える。
 - 目標設定と「目標達成して使う」ボタンが使える。
 - manifest、Service Worker、アイコンが読み込まれている。
+- v8確認URL `https://bonjouryamada.github.io/gosa-savings/?v=8` で最新版が表示される。

@@ -1,4 +1,4 @@
-const CACHE_NAME = "gosa-savings-app-v7";
+const CACHE_NAME = "gosa-savings-app-v8";
 
 const CORE_ASSETS = [
   "./",
