@@ -54,7 +54,7 @@
                 <div class="v7-pill" id="v7-home-month">今月 ¥0</div>
                 <div class="v7-next-stage" id="v7-next-stage">次の進化まで ¥10</div>
               </div>
-              <img class="v7-mascot" id="v7-home-mascot" src="./output/imagegen/mascot-stage-0.png" alt="成長するキャラクター" />
+              <img class="v7-mascot" id="v7-home-mascot" src="./output/imagegen/mascot-stage-0-transparent.png" alt="成長するキャラクター" />
               <div class="v7-action-grid">
                 <button class="v7-primary" type="button" data-start-mode="saved">使わなかったを記録</button>
                 <button class="v7-bad" type="button" data-start-mode="spent">使ってしまったを記録</button>
@@ -98,7 +98,7 @@
                 <span id="v7-memo-label">何を使わなかった？</span>
                 <textarea id="v7-memo" placeholder="例：タクシーを使わず歩けた" autocomplete="off"></textarea>
               </label>
-              <label class="v7-field">
+              <label class="v7-field v7-date-field v7-hidden">
                 <span>日付</span>
                 <input id="v7-date" type="date" />
               </label>
@@ -129,10 +129,7 @@
               <span>カテゴリ編集と目標</span>
             </div>
             <section class="v7-profile-hero">
-              <img id="v7-profile-mascot" src="./output/imagegen/mascot-stage-0.png" alt="現在のキャラクター" />
-              <div>
-                <span class="v7-label">現在のキャラクター</span>
-              </div>
+              <img id="v7-profile-mascot" src="./output/imagegen/mascot-stage-0-transparent.png" alt="成長するキャラクター" />
             </section>
             <div class="v7-stats-grid v7-profile-stats">
               <div class="v7-stat"><span>累計貯金額</span><strong id="v7-profile-total">¥0</strong></div>
@@ -141,7 +138,7 @@
               <div class="v7-stat"><span>目標</span><strong id="v7-profile-goal">未設定</strong></div>
             </div>
             <section class="v7-form v7-goal-form">
-              <div class="v7-section-title compact"><h2>目標を設定</h2></div>
+              <div class="v7-section-title compact"><h2 id="v7-goal-form-title">目標を設定</h2></div>
               <input id="v7-goal-name" type="text" placeholder="例：沖縄旅行" autocomplete="off" />
               <input id="v7-goal-amount" type="number" inputmode="numeric" min="1" placeholder="目標金額" autocomplete="off" />
               <button class="v7-primary" type="button" id="v7-save-goal">目標を保存</button>
@@ -167,16 +164,16 @@
     :root { color-scheme: light; --bg:#f5f6f3; --paper:#fff; --mint:#edf5f1; --ink:#17201c; --muted:#78817b; --line:rgba(23,32,28,.1); --green:#1e7f63; --deep:#10634c; --gold:#d8a437; --bad:#8e2f2f; --bad-bg:#fff0ed; --font-family:"Hiragino Sans","Yu Gothic UI","Yu Gothic","Noto Sans JP",system-ui,sans-serif; font-family:var(--font-family); }
     *{box-sizing:border-box} body{margin:0;min-width:320px;background:linear-gradient(145deg,#fbfbf3,#eef6f1);color:var(--ink);font-family:var(--font-family)}
     button,input,textarea{font:inherit} button{border:0;cursor:pointer} .v7-app{width:min(100%,520px);min-height:100vh;margin:0 auto;padding:14px 14px 96px}.v7-shell{min-height:calc(100vh - 110px);border:1px solid var(--line);border-radius:32px;background:rgba(255,255,255,.95);box-shadow:0 18px 50px rgba(27,54,43,.12);overflow:hidden}
-    .v7-screen{display:none;padding:18px 18px 108px}.v7-screen.is-active{display:block}.v7-hero,.v7-form,.v7-panel,.v7-goal,.v7-profile-hero{border:1px solid var(--line);border-radius:26px;background:var(--paper);box-shadow:0 12px 28px rgba(27,54,43,.08);padding:18px}.v7-hero{display:grid;grid-template-columns:1fr 132px;gap:16px;background:linear-gradient(145deg,var(--mint),#fff 72%)}.v7-label{color:var(--deep);font-size:13px;font-weight:900}.v7-total{margin-top:4px;font-size:52px;font-weight:950;letter-spacing:0}.v7-pill{display:inline-flex;margin-top:10px;border-radius:999px;background:var(--green);color:#fff;padding:8px 13px;font-weight:900}.v7-mascot{width:132px;height:132px;border-radius:30px;object-fit:cover;background:var(--mint)}
+    .v7-screen{display:none;padding:18px 18px 108px}.v7-screen.is-active{display:block}.v7-hero,.v7-form,.v7-panel,.v7-goal,.v7-profile-hero{border:1px solid var(--line);border-radius:26px;background:var(--paper);box-shadow:0 12px 28px rgba(27,54,43,.08);padding:18px}.v7-hero{display:grid;grid-template-columns:1fr 132px;gap:16px;background:linear-gradient(145deg,var(--mint),#fff 72%)}.v7-label{color:var(--deep);font-size:13px;font-weight:900}.v7-total{margin-top:4px;font-size:52px;font-weight:950;letter-spacing:0}.v7-pill{display:inline-flex;margin-top:10px;border-radius:999px;background:var(--green);color:#fff;padding:8px 13px;font-weight:900}.v7-mascot{width:132px;height:132px;aspect-ratio:1/1;border-radius:0;object-fit:contain;background:transparent;padding:2px}
     .v7-action-grid{grid-column:1/-1;display:grid;gap:10px}.v7-primary,.v7-bad,.v7-small-button,.v7-reset,.v7-shine{width:100%;border-radius:20px;padding:14px 16px;font-weight:950}.v7-primary{background:var(--green);color:#fff;box-shadow:0 14px 28px rgba(30,127,99,.2)}.v7-bad{background:linear-gradient(135deg,#522,#9d3d35);color:#fff;box-shadow:0 14px 28px rgba(142,47,47,.18)}.v7-small-button{background:var(--mint);color:var(--deep)}.v7-shine{background:linear-gradient(135deg,#f7d875,#d8a437,#fff0a8);color:#4c3500;box-shadow:0 16px 32px rgba(216,164,55,.28)}.v7-reset{background:#fff0ed;color:#9b352b}
     .v7-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 12px}.v7-section-title h2{margin:0;font-size:18px}.v7-section-title span{color:var(--muted);font-size:13px;font-weight:800}.compact{margin:0}.v7-list,.v7-bars{display:grid;gap:10px}.v7-record,.v7-category-row,.v7-item{display:grid;gap:10px;border:1px solid var(--line);border-radius:20px;background:#fff;padding:14px}.v7-record-top{display:flex;justify-content:space-between;gap:12px}.v7-record p{margin:0;font-weight:900}.v7-record small,.v7-item small{color:var(--muted);font-weight:800}.v7-positive{color:var(--green)}.v7-negative{color:var(--bad)}.v7-card-actions{display:flex;gap:8px}.v7-mini{border-radius:999px;background:var(--mint);color:var(--deep);padding:8px 12px;font-size:12px;font-weight:900}.v7-mini.danger{background:var(--bad-bg);color:var(--bad)}
     .v7-field{display:grid;gap:8px}.v7-field span{color:var(--deep);font-size:13px;font-weight:900} input,textarea{width:100%;border:1px solid rgba(23,32,28,.12);border-radius:18px;background:#fbfcf9;color:var(--ink);outline:0;padding:14px 15px} input:focus,textarea:focus{border-color:rgba(30,127,99,.45);box-shadow:0 0 0 4px rgba(30,127,99,.1)} textarea{min-height:92px;resize:vertical}.v7-amount-input{font-size:34px;font-weight:950}.v7-form{display:grid;gap:14px}.v7-mode-row,.v7-inline{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v7-mode{border-radius:18px;background:var(--mint);color:var(--deep);padding:12px;font-weight:900}.v7-mode.is-active{background:var(--green);color:#fff}.v7-mode.is-danger.is-active{background:var(--bad)}.v7-chips{display:flex;flex-wrap:wrap;gap:8px}.v7-chip{border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);padding:10px 12px;font-size:14px;font-weight:900}.v7-chip.is-active{background:var(--green);color:#fff}.v7-example{margin:0;border-radius:16px;background:var(--mint);color:var(--deep);padding:11px 12px;font-size:13px;font-weight:800}
     .v7-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v7-stat{border-radius:20px;background:var(--mint);padding:14px}.v7-stat span{display:block;color:var(--muted);font-size:12px;font-weight:800}.v7-stat strong{font-size:22px;color:var(--deep)}.v7-red-stat strong{color:var(--bad)}.v7-bar{display:grid;grid-template-columns:86px 1fr 86px;gap:8px;align-items:center;font-size:13px;font-weight:800;color:var(--muted)}.v7-track{height:14px;border-radius:999px;background:var(--mint);overflow:hidden}.v7-fill{height:100%;width:var(--w);border-radius:999px;background:linear-gradient(90deg,var(--green),var(--gold))}.v7-fill.neg{background:linear-gradient(90deg,#c75b4a,var(--bad))}
-    .v7-goal{display:grid;gap:10px;margin-top:14px}.v7-goal h2,.v7-milestones h2{margin:0;font-size:17px}.v7-next-stage{margin-top:8px;color:var(--muted);font-size:12px;font-weight:900}.v7-progress{height:14px;border-radius:999px;background:var(--mint);overflow:hidden}.v7-progress div{height:100%;width:var(--w);background:linear-gradient(90deg,var(--green),var(--gold))}.v7-milestones{display:grid;gap:10px;margin-top:16px}.v7-item{grid-template-columns:1fr auto;align-items:center}.v7-item.reached{background:linear-gradient(135deg,#fff,var(--mint))}.v7-profile-hero{display:grid;grid-template-columns:150px 1fr;align-items:center;gap:10px}.v7-profile-hero img{width:150px;height:150px;border-radius:24px;object-fit:contain;background:var(--mint);padding:4px}.v7-profile-stats{margin-top:12px}.v7-hidden{display:none!important}
+    .v7-goal{display:grid;gap:10px;margin-top:14px}.v7-goal h2,.v7-milestones h2{margin:0;font-size:17px}.v7-next-stage{margin-top:8px;color:var(--muted);font-size:12px;font-weight:900}.v7-progress{height:14px;border-radius:999px;background:var(--mint);overflow:hidden}.v7-progress div{height:100%;width:var(--w);background:linear-gradient(90deg,var(--green),var(--gold))}.v7-milestones{display:grid;gap:10px;margin-top:16px}.v7-item{grid-template-columns:1fr auto;align-items:center}.v7-item.reached{background:linear-gradient(135deg,#fff,var(--mint))}.v7-profile-hero{display:grid;place-items:center;gap:8px}.v7-profile-hero img{width:150px;height:150px;aspect-ratio:1/1;border-radius:0;object-fit:contain;background:transparent;padding:2px}.v7-profile-stats{margin-top:12px}.v7-hidden{display:none!important}
     .v7-nav{position:fixed;left:50%;bottom:14px;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;width:min(calc(100% - 32px),488px);padding:6px;border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.95);box-shadow:0 14px 34px rgba(27,54,43,.14);transform:translateX(-50%)}.v7-nav button{border-radius:18px;background:transparent;color:var(--muted);padding:10px 4px;font-size:12px;font-weight:900}.v7-nav button.is-active{background:var(--mint);color:var(--deep)}.v7-toast{position:fixed;left:50%;bottom:86px;z-index:30;width:min(calc(100% - 36px),460px);border-radius:18px;background:var(--ink);color:#fff;padding:12px 14px;text-align:center;font-weight:900;opacity:0;pointer-events:none;transform:translateX(-50%);transition:.2s}.v7-toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
-    .v7-mascot{object-fit:contain;padding:4px}
+    .v7-mascot{object-fit:contain;padding:2px}
     @media(min-width:421px){.v7-hero{grid-template-columns:1fr 156px}.v7-mascot{width:156px;height:156px}}
-    @media(max-width:420px){.v7-app{padding:0 0 86px}.v7-shell{border:0;border-radius:0;min-height:100vh}.v7-hero{grid-template-columns:1fr 132px}.v7-mascot{width:132px;height:132px}.v7-total{font-size:46px}.v7-profile-hero{grid-template-columns:132px 1fr}.v7-profile-hero img{width:132px;height:132px}}
+    @media(max-width:420px){.v7-app{padding:0 0 86px}.v7-shell{border:0;border-radius:0;min-height:100vh}.v7-hero{grid-template-columns:1fr 132px}.v7-mascot{width:132px;height:132px}.v7-total{font-size:46px}.v7-profile-hero{grid-template-columns:1fr}.v7-profile-hero img{width:132px;height:132px}}
   `;
   document.head.appendChild(style);
 
@@ -216,6 +213,7 @@
     profileRecords: document.getElementById("v7-profile-records"),
     profileCategories: document.getElementById("v7-profile-categories"),
     profileGoal: document.getElementById("v7-profile-goal"),
+    goalFormTitle: document.getElementById("v7-goal-form-title"),
     goalName: document.getElementById("v7-goal-name"),
     goalAmount: document.getElementById("v7-goal-amount"),
     saveGoal: document.getElementById("v7-save-goal"),
@@ -260,6 +258,7 @@
     els.goalCard.addEventListener("click", (event) => {
       if (event.target.id === "v7-achieve-goal") achieveGoal();
       if (event.target.id === "v7-clear-goal") clearGoal();
+      if (event.target.id === "v7-edit-goal") editGoal();
     });
     els.reset.addEventListener("click", () => {
       if (!confirm("記録をすべて削除して0から始めますか？")) return;
@@ -311,7 +310,7 @@
       categoryId: category.id,
       categoryName: category.name,
       memo: els.memo.value.trim() || category.example,
-      date: els.date.value || today(),
+      date: state.editingRecordId ? els.date.value || today() : today(),
     };
     if (state.editingRecordId) {
       state.records = state.records.map((record) => (record.id === state.editingRecordId ? data : record));
@@ -345,6 +344,7 @@
     els.amount.value = record.amount;
     els.memo.value = record.memo;
     els.date.value = record.date;
+    els.date.closest(".v7-date-field").classList.remove("v7-hidden");
     setMode(record.type || "saved");
     renderChips();
     els.formTitle.textContent = "記録を編集";
@@ -357,6 +357,7 @@
     state.editingRecordId = null;
     els.form.reset();
     els.date.value = today();
+    els.date.closest(".v7-date-field").classList.add("v7-hidden");
     els.formTitle.textContent = "誤差を記録";
     els.cancelEdit.classList.add("v7-hidden");
     setMode(state.recordMode);
@@ -433,6 +434,7 @@
   }
 
   function saveGoal() {
+    const hadGoal = Boolean(state.goal);
     const name = els.goalName.value.trim();
     const amount = Number(els.goalAmount.value);
     if (!name || !amount || amount < 1) {
@@ -441,10 +443,14 @@
     }
     state.goal = { name, amount };
     saveGoalState();
-    els.goalName.value = "";
-    els.goalAmount.value = "";
     render();
-    toast("目標を設定しました");
+    toast(hadGoal ? "目標を更新しました" : "目標を設定しました");
+  }
+
+  function editGoal() {
+    fillGoalForm();
+    navigate("profile");
+    setTimeout(() => els.goalName.focus({ preventScroll: true }), 100);
   }
 
   function clearGoal() {
@@ -452,6 +458,13 @@
     removeStored([stableGoalKey, goalKey]);
     render();
     toast("目標を削除しました");
+  }
+
+  function fillGoalForm() {
+    els.goalFormTitle.textContent = state.goal ? "目標を編集" : "目標を設定";
+    els.goalName.value = state.goal ? state.goal.name : "";
+    els.goalAmount.value = state.goal ? state.goal.amount : "";
+    els.saveGoal.textContent = state.goal ? "目標を更新" : "目標を保存";
   }
 
   function achieveGoal() {
@@ -476,7 +489,7 @@
   function render() {
     const stats = getStats();
     const stage = getStage(stats.total);
-    const stageSrc = `./output/imagegen/mascot-stage-${stage}.png`;
+    const stageSrc = `./output/imagegen/mascot-stage-${stage}-transparent.png`;
     els.total.textContent = yen.format(stats.total);
     els.month.textContent = `今月 ${yen.format(stats.month)}`;
     els.nextStage.textContent = getNextStageText(stats.total);
@@ -486,6 +499,7 @@
     els.profileRecords.textContent = `${state.records.length}件`;
     els.profileCategories.textContent = `${state.categories.length}個`;
     els.profileGoal.textContent = state.goal ? state.goal.name : "未設定";
+    fillGoalForm();
     els.countLabel.textContent = `${state.records.length}件`;
     els.statsTotal.textContent = yen.format(stats.total);
     els.statsSaved.textContent = yen.format(stats.saved);
@@ -540,6 +554,7 @@
       <p>${yen.format(Math.max(total, 0))} / ${yen.format(state.goal.amount)}</p>
       <div class="v7-progress"><div style="--w:${progress}%"></div></div>
       ${achieved ? `<button class="v7-shine" type="button" id="v7-achieve-goal">目標達成して使う</button>` : `<p class="v7-muted">あと ${yen.format(state.goal.amount - Math.max(total, 0))}</p>`}
+      <button class="v7-small-button" type="button" id="v7-edit-goal">目標を編集</button>
       <button class="v7-small-button" type="button" id="v7-clear-goal">目標を削除</button>
     `;
   }

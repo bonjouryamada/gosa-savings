@@ -1,4 +1,4 @@
-const CACHE_NAME = "gosa-savings-app-v8";
+const CACHE_NAME = "gosa-savings-app-v9";
 
 const CORE_ASSETS = [
   "./",
@@ -12,19 +12,19 @@ const CORE_ASSETS = [
   "./public/icons/app-icon-512.png",
   "./public/icons/maskable-icon-512.png",
   "./output/imagegen/mascot-trimmed.png",
-  "./output/imagegen/mascot-stage-0.png",
-  "./output/imagegen/mascot-stage-1.png",
-  "./output/imagegen/mascot-stage-2.png",
-  "./output/imagegen/mascot-stage-3.png",
-  "./output/imagegen/mascot-stage-4.png",
-  "./output/imagegen/mascot-stage-5.png"
+  "./output/imagegen/mascot-stage-0-transparent.png",
+  "./output/imagegen/mascot-stage-1-transparent.png",
+  "./output/imagegen/mascot-stage-2-transparent.png",
+  "./output/imagegen/mascot-stage-3-transparent.png",
+  "./output/imagegen/mascot-stage-4-transparent.png",
+  "./output/imagegen/mascot-stage-5-transparent.png"
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(CORE_ASSETS))
+      .then((cache) => Promise.allSettled(CORE_ASSETS.map((asset) => cache.add(asset))))
       .then(() => self.skipWaiting()),
   );
 });
