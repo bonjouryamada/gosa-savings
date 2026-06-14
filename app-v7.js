@@ -5,6 +5,8 @@
   const stableRecordKey = "gosa-savings-records";
   const stableCategoryKey = "gosa-savings-categories";
   const stableGoalKey = "gosa-savings-goal";
+  const settingsKey = "gosa-savings-settings";
+  const lastSyncUidKey = "gosa-savings-last-sync-uid";
   const yen = new Intl.NumberFormat("ja-JP", {
     style: "currency",
     currency: "JPY",
@@ -20,19 +22,23 @@
     { id: "other", name: "その他", example: "なんとなくの出費を見送った" },
   ];
   const maxCategoryNameLength = 16;
+  let cloudTimer = null;
+  let cloudUid = null;
+  let cloudMigration = null;
 
   const milestones = [
     { name: "東京ディズニーランド 1デーパスポート", amount: 10900, note: "大人1日券の上限目安" },
-    { name: "Nintendo Switch 有機ELモデル", amount: 37980, note: "任天堂公式価格（5/25から47,980円予定）" },
+    { name: "Nintendo Switch 有機ELモデル", amount: 47980, note: "任天堂公式希望小売価格" },
     { name: "沖縄旅行 2泊3日", amount: 80000, note: "1人分の旅行費用目安" },
     { name: "ハワイ旅行 5泊7日", amount: 300000, note: "1人分の旅行費用目安" },
     { name: "バーキン25", amount: 2013000, note: "2026年2月改定後の定価目安" },
   ];
 
   const state = {
-    records: readJsonFromKeys([stableRecordKey, recordKey], []),
+    records: normalizeRecords(readJsonFromKeys([stableRecordKey, recordKey], [])),
     categories: readCategories(),
     goal: readJsonFromKeys([stableGoalKey, goalKey], null),
+    settings: normalizeSettings(readJson(settingsKey, {})),
     selectedCategoryId: "traffic",
     recordMode: "saved",
     editingRecordId: null,
@@ -226,6 +232,7 @@
   renderChips();
   render();
   bind();
+  initV10();
 
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
     window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
@@ -399,9 +406,7 @@
         toast(`カテゴリ名は${maxCategoryNameLength}文字までです`);
         return;
       }
-      const example = prompt("例文", category.example) || category.example;
       category.name = name.trim();
-      category.example = example.trim();
       state.records.forEach((record) => {
         if (record.categoryId === id) record.categoryName = category.name;
       });
@@ -456,6 +461,7 @@
   function clearGoal() {
     state.goal = null;
     removeStored([stableGoalKey, goalKey]);
+    scheduleCloudSave();
     render();
     toast("目標を削除しました");
   }
@@ -488,11 +494,13 @@
 
   function render() {
     const stats = getStats();
-    const stage = getStage(stats.total);
-    const stageSrc = `./output/imagegen/mascot-stage-${stage}-transparent.png`;
+    const growth = window.GosaGrowth && window.GosaGrowth.getProgress(stats.total);
+    const stageSrc = growth ? growth.current.asset : "./output/imagegen/mascot-stage-0-transparent.png";
     els.total.textContent = yen.format(stats.total);
     els.month.textContent = `今月 ${yen.format(stats.month)}`;
-    els.nextStage.textContent = getNextStageText(stats.total);
+    els.nextStage.textContent = growth
+      ? `${growth.current.name} / ${growth.next ? `次: ${growth.next.name}まで ${yen.format(growth.remaining)}` : "最高段階"}`
+      : getNextStageText(stats.total);
     els.homeMascot.src = stageSrc;
     els.profileMascot.src = stageSrc;
     els.profileTotal.textContent = yen.format(stats.total);
@@ -525,8 +533,8 @@
         <article class="v7-record">
           <div class="v7-record-top">
             <div>
-              <p>${escapeHtml(record.memo)}</p>
-              <small>${escapeHtml(record.categoryName)}・${escapeHtml(record.date)}</small>
+              <p>${escapeHtml(record.memo || record.categoryName || "記録")}</p>
+              <small>${escapeHtml(record.categoryName || "未分類")}・${escapeHtml(record.date || "")}</small>
             </div>
             <strong class="${cls}">${sign}${yen.format(Math.abs(effect))}</strong>
           </div>
@@ -593,8 +601,7 @@
     els.categoryList.innerHTML = state.categories.map((category) => `
       <article class="v7-category-row">
         <div>
-          <strong>${escapeHtml(category.name)}</strong><br />
-          <small>${escapeHtml(category.example)}</small>
+          <strong>${escapeHtml(category.name)}</strong>
         </div>
         <div class="v7-card-actions">
           <button class="v7-mini" type="button" data-category-action="edit" data-category-id="${category.id}">編集</button>
@@ -652,12 +659,13 @@
       total += effect;
       if (effect >= 0) saved += effect;
       else spent += Math.abs(effect);
-      const month = record.date.slice(0, 7);
+      const month = typeof record.date === "string" && record.date.length >= 7 ? record.date.slice(0, 7) : "不明";
       monthMap.set(month, (monthMap.get(month) || 0) + effect);
-      categoryMap.set(record.categoryName, (categoryMap.get(record.categoryName) || 0) + effect);
+      const categoryName = record.categoryName || "未分類";
+      categoryMap.set(categoryName, (categoryMap.get(categoryName) || 0) + effect);
     });
     const month = state.records
-      .filter((record) => record.date.slice(0, 7) === nowMonth)
+      .filter((record) => typeof record.date === "string" && record.date.slice(0, 7) === nowMonth)
       .reduce((sum, record) => sum + recordEffect(record), 0);
     return {
       total: Math.max(0, total),
@@ -670,7 +678,9 @@
   }
 
   function recordEffect(record) {
-    return record.type === "spent" || record.type === "goal" ? -Number(record.amount) : Number(record.amount);
+    const amount = Number(record && record.amount);
+    const safeAmount = Number.isFinite(amount) ? amount : 0;
+    return record && (record.type === "spent" || record.type === "goal") ? -safeAmount : safeAmount;
   }
 
   function getRawTotal() {
@@ -705,14 +715,17 @@
 
   function saveRecords() {
     saveJson([stableRecordKey, recordKey], state.records);
+    scheduleCloudSave();
   }
 
   function saveCategories() {
     saveJson([stableCategoryKey, categoryKey], state.categories);
+    scheduleCloudSave();
   }
 
   function saveGoalState() {
     saveJson([stableGoalKey, goalKey], state.goal);
+    scheduleCloudSave();
   }
 
   function saveJson(keys, value) {
@@ -741,8 +754,131 @@
     }
   }
 
+  function scheduleCloudSave() {
+    clearTimeout(cloudTimer);
+    const user = window.GosaCloud?.currentUser();
+    const lastSyncUid = localStorage.getItem(lastSyncUidKey);
+    if (!user || (lastSyncUid && lastSyncUid !== user.uid)) return;
+    cloudTimer = setTimeout(saveCloudNow, 700);
+  }
+  async function saveCloudNow() {
+    const user = window.GosaCloud?.currentUser();
+    const lastSyncUid = localStorage.getItem(lastSyncUidKey);
+    if (!user || (lastSyncUid && lastSyncUid !== user.uid)) return;
+    try {
+      if (cloudUid !== user.uid) {
+        await migrateCloud(user);
+        if (cloudUid !== user.uid) return;
+      }
+      await window.GosaCloud.saveData({ records: state.records, categories: state.categories, goal: state.goal, settings: state.settings, schemaVersion: 10 });
+      toast("クラウド同期済み");
+    } catch { toast("同期失敗。端末データは保存済みです"); }
+  }
+  function mergeById(remote, local) {
+    return [...new Map([...(remote || []), ...(local || [])].map((item) => [item.id, item])).values()];
+  }
+  function normalizeRecords(records) {
+    return (Array.isArray(records) ? records : []).map((record, index) => {
+      const amount = Number(record?.amount);
+      const type = ["saved", "spent", "goal"].includes(record?.type) ? record.type : "saved";
+      return {
+        ...record,
+        id: record?.id || `legacy-${index}-${Date.now()}`,
+        type,
+        amount: Number.isFinite(amount) && amount >= 0 ? amount : 0,
+        date: typeof record?.date === "string" && record.date ? record.date : today(),
+        categoryId: record?.categoryId || "other",
+        categoryName: record?.categoryName || "未分類",
+        memo: record?.memo || record?.categoryName || "記録",
+      };
+    });
+  }
+  function normalizeSettings(settings) {
+    const value = settings && typeof settings === "object" ? settings : {};
+    return { ...value, mode: value.mode === "strict" ? "strict" : "normal" };
+  }
+  function persistV10() {
+    saveJson([stableRecordKey, recordKey], state.records);
+    saveJson([stableCategoryKey, categoryKey], state.categories);
+    if (state.goal) saveJson([stableGoalKey, goalKey], state.goal);
+    else removeStored([stableGoalKey, goalKey]);
+    localStorage.setItem(settingsKey, JSON.stringify(state.settings));
+  }
+  async function migrateCloud(user) {
+    if (!user || cloudUid === user.uid) return;
+    if (cloudMigration) return cloudMigration;
+    cloudMigration = (async () => {
+      const remote = await window.GosaCloud.loadData();
+      const lastSyncUid = localStorage.getItem(lastSyncUidKey);
+      const switchedUid = Boolean(lastSyncUid && lastSyncUid !== user.uid);
+      if (switchedUid) {
+        // Never carry the previous account's device data into a different UID.
+        state.records = normalizeRecords(remote?.records);
+        state.categories = Array.isArray(remote?.categories) && remote.categories.length ? remote.categories : defaultCategories.map((category) => ({ ...category }));
+        state.goal = remote?.goal ?? null;
+        state.settings = normalizeSettings(remote?.settings);
+        state.selectedCategoryId = state.categories[0]?.id || "traffic";
+        persistV10();
+      } else {
+        const localGoal = state.goal;
+        const localSettings = state.settings;
+        state.records = normalizeRecords(mergeById(remote?.records, state.records));
+        state.categories = mergeById(remote?.categories, state.categories);
+        state.goal = localGoal ?? remote?.goal ?? null;
+        state.settings = normalizeSettings(Object.assign({}, remote?.settings || {}, localSettings || {}));
+        persistV10();
+        await window.GosaCloud.saveData({ records: state.records, categories: state.categories, goal: state.goal, settings: state.settings, schemaVersion: 10 });
+      }
+      localStorage.setItem(lastSyncUidKey, user.uid);
+      cloudUid = user.uid;
+      applyMode(); renderChips(); render();
+    })();
+    try {
+      await cloudMigration;
+    } catch (error) {
+      cloudUid = null;
+      throw error;
+    } finally {
+      cloudMigration = null;
+    }
+  }
+  function applyMode() {
+    const strict = state.settings.mode === "strict";
+    document.querySelectorAll('[data-start-mode="spent"],[data-mode="spent"],.v7-red-stat').forEach((node) => node.classList.toggle("v7-hidden", !strict));
+    document.querySelectorAll("[data-setting-mode]").forEach((node) => node.classList.toggle("is-active", node.dataset.settingMode === state.settings.mode));
+    if (!strict && state.recordMode === "spent") setMode("saved");
+  }
+  function renderCloud(user, available) {
+    const box = document.getElementById("v10-cloud");
+    if (!available) return box.innerHTML = "<p>クラウド同期は未設定です。FIREBASE_SETUP.md を確認してください。</p>";
+    box.innerHTML = user
+      ? `<strong>${escapeHtml(user.email || "")}</strong><div class="v10-actions"><button class="v7-primary" data-cloud="sync">今すぐ同期</button><button class="v7-small-button" data-cloud="out">ログアウト</button></div>`
+      : `<input id="v10-email" type="email" placeholder="メール"><input id="v10-pass" type="password" placeholder="パスワード"><div class="v10-actions"><button class="v7-primary" data-cloud="up">新規登録</button><button class="v7-primary" data-cloud="in">ログイン</button></div><button class="v7-small-button" data-cloud="reset">パスワード再設定</button>`;
+  }
+  async function initV10() {
+    const section = document.createElement("section");
+    section.className = "v7-form"; section.innerHTML = `<h2>設定・クラウド同期</h2><div class="v7-mode-row"><button class="v7-mode" data-setting-mode="normal">ノーマル</button><button class="v7-mode" data-setting-mode="strict">ストイック</button></div><div id="v10-cloud" class="v7-form"></div>`;
+    document.getElementById("v7-profile").insertBefore(section, els.reset);
+    const style = document.createElement("style"); style.textContent = `.v7-hero{display:flex;flex-direction:column}.v7-mascot,.v7-profile-hero img{display:block;width:min(100%,260px)!important;height:auto!important;max-width:100%;max-height:none;min-height:0;aspect-ratio:auto!important;object-fit:contain;margin:auto;background:transparent;padding:0}.v7-profile-hero{border:0!important;background:transparent!important;box-shadow:none!important;padding:8px 0!important}.v10-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}`; document.head.appendChild(style);
+    section.addEventListener("click", async (event) => {
+      if (event.target.dataset.settingMode) { state.settings.mode = event.target.dataset.settingMode; localStorage.setItem(settingsKey, JSON.stringify(state.settings)); applyMode(); scheduleCloudSave(); }
+      const action = event.target.dataset.cloud; if (!action) return;
+      try { const e=document.getElementById("v10-email")?.value, p=document.getElementById("v10-pass")?.value;
+        if(action==="up") await GosaCloud.signUp(e,p); if(action==="in") await GosaCloud.signIn(e,p); if(action==="reset") await GosaCloud.sendPasswordReset(e); if(action==="sync") await saveCloudNow(); if(action==="out") await GosaCloud.signOut();
+      } catch(error) { toast(GosaCloud.readableError(error)); }
+    });
+    applyMode();
+    if (!window.GosaCloud) return renderCloud(null, false);
+    await GosaCloud.ready; renderCloud(GosaCloud.currentUser(), GosaCloud.available);
+    GosaCloud.subscribeAuth((user) => { clearTimeout(cloudTimer); renderCloud(user, GosaCloud.available); if(user) migrateCloud(user).catch(()=>toast("同期失敗。端末データは保存済みです")); else cloudUid=null; });
+  }
+
   function today() {
-    return new Date().toISOString().slice(0, 10);
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   }
 
   function toast(message) {

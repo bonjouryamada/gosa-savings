@@ -1,7 +1,7 @@
 {
   "name": "誤差貯金",
   "short_name": "誤差貯金",
-  "description": "使わなかった小さなお金を記録し、貯金額と成長を見られるアプリ。",
+  "description": "メールでクラウド同期し、貯金にあわせて25段階に成長する記録アプリ",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,21 +9,8 @@
   "theme_color": "#1E7F63",
   "background_color": "#F5F6F3",
   "icons": [
-    {
-      "src": "public/icons/app-icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "public/icons/app-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "public/icons/maskable-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "public/icons/app-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "public/icons/app-icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "public/icons/maskable-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

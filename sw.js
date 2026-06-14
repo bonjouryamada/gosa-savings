@@ -1,9 +1,12 @@
-const CACHE_NAME = "gosa-savings-app-v9";
+const CACHE_NAME = "gosa-savings-app-v11";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./app-v7.js",
+  "./firebase-config.js",
+  "./firebase-sync.js",
+  "./growth-stages.js",
   "./manifest.webmanifest",
   "./install.html",
   "./privacy.html",
@@ -17,7 +20,10 @@ const CORE_ASSETS = [
   "./output/imagegen/mascot-stage-2-transparent.png",
   "./output/imagegen/mascot-stage-3-transparent.png",
   "./output/imagegen/mascot-stage-4-transparent.png",
-  "./output/imagegen/mascot-stage-5-transparent.png"
+  "./output/imagegen/mascot-stage-5-transparent.png",
+  ...Array.from({ length: 25 }, (_, index) => `./output/imagegen/growth/growth-${String(index).padStart(2, "0")}-${[
+    "wakaba","tsubomi","asagao","himawari","tanpopo","sumire","tsubaki","ajisai","yuri","bara","ran","kiku","sakura","ume","momiji","keyaki","icho","kusunoki","matsu","hinoki","sequoia","gajumaru","jomon-sugi","mokuton-jukai-kotan","yggdrasil"
+  ][index]}.png`)
 ];
 
 self.addEventListener("install", (event) => {
