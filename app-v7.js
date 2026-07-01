@@ -34,6 +34,34 @@
     { name: "バーキン25", amount: 2013000, note: "2026年2月改定後の定価目安" },
   ];
 
+  const fallbackGrowthStages = [
+    { threshold: 0, name: "わかば" },
+    { threshold: 5000, name: "つぼみ" },
+    { threshold: 10000, name: "あさがお" },
+    { threshold: 20000, name: "ひまわり" },
+    { threshold: 30000, name: "たんぽぽ" },
+    { threshold: 40000, name: "すみれ" },
+    { threshold: 50000, name: "つばき" },
+    { threshold: 60000, name: "あじさい" },
+    { threshold: 70000, name: "ゆり" },
+    { threshold: 80000, name: "ばら" },
+    { threshold: 90000, name: "らん" },
+    { threshold: 100000, name: "さくら" },
+    { threshold: 110000, name: "はなみずき" },
+    { threshold: 120000, name: "うめ" },
+    { threshold: 130000, name: "もみじ" },
+    { threshold: 140000, name: "けやき" },
+    { threshold: 150000, name: "いちょう" },
+    { threshold: 200000, name: "くすのき" },
+    { threshold: 250000, name: "まつ" },
+    { threshold: 300000, name: "ひのき" },
+    { threshold: 500000, name: "せこいあ" },
+    { threshold: 750000, name: "ガジュマル" },
+    { threshold: 1000000, name: "縄文杉" },
+    { threshold: 5000000, name: "木遁・樹海降誕" },
+    { threshold: 10000000, name: "ユグドラシル" },
+  ];
+
   const state = {
     records: normalizeRecords(readJsonFromKeys([stableRecordKey, recordKey], [])),
     categories: readCategories(),
@@ -58,7 +86,7 @@
                 <span class="v7-label">合計貯金額</span>
                 <div class="v7-total" id="v7-home-total">¥0</div>
                 <div class="v7-pill" id="v7-home-month">今月 ¥0</div>
-                <div class="v7-next-stage" id="v7-next-stage">次の進化まで ¥10</div>
+                <div class="v7-next-stage" id="v7-next-stage">わかば / 次: つぼみまで ¥5,000</div>
               </div>
               <img class="v7-mascot" id="v7-home-mascot" src="./output/imagegen/mascot-stage-0-transparent.png" alt="成長するキャラクター" />
               <div class="v7-action-grid">
@@ -689,18 +717,14 @@
 
   function getStage(total) {
     const value = Math.max(total, 0);
-    if (value < 10) return 0;
-    if (value < 100) return 1;
-    if (value < 1000) return 2;
-    if (value < 10000) return 3;
-    if (value < 100000) return 4;
-    return 5;
+    return fallbackGrowthStages.reduce((stageIndex, stage, index) => (value >= stage.threshold ? index : stageIndex), 0);
   }
 
   function getNextStageText(total) {
     const value = Math.max(total, 0);
-    const next = [10, 100, 1000, 10000, 100000].find((amount) => value < amount);
-    return next ? `次の進化まで ${yen.format(next - value)}` : "最高ステージに到達中";
+    const current = fallbackGrowthStages[getStage(value)];
+    const next = fallbackGrowthStages.find((stage) => value < stage.threshold);
+    return next ? `${current.name} / 次: ${next.name}まで ${yen.format(next.threshold - value)}` : "ユグドラシル / 最高段階";
   }
 
   function selectedCategory() {

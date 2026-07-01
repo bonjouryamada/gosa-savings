@@ -1,4 +1,4 @@
-const CACHE_NAME = "gosa-savings-app-v12";
+const CACHE_NAME = "gosa-savings-app-v13";
 
 const CORE_ASSETS = [
   "./",
@@ -20,7 +20,7 @@ const CORE_ASSETS = [
   "./output/imagegen/mascot-stage-4-transparent.png",
   "./output/imagegen/mascot-stage-5-transparent.png",
   ...Array.from({ length: 25 }, (_, index) => `./output/imagegen/growth/growth-${String(index).padStart(2, "0")}-${[
-    "wakaba","tsubomi","asagao","himawari","tanpopo","sumire","tsubaki","ajisai","yuri","bara","ran","kiku","sakura","ume","momiji","keyaki","icho","kusunoki","matsu","hinoki","sequoia","gajumaru","jomon-sugi","mokuton-jukai-kotan","yggdrasil"
+    "wakaba","tsubomi","asagao","himawari","tanpopo","sumire","tsubaki","ajisai","yuri","bara","ran","sakura","hanamizuki","ume","momiji","keyaki","icho","kusunoki","matsu","hinoki","sequoia","gajumaru","jomon-sugi","mokuton-jukai-kotan","yggdrasil"
   ][index]}.png`)
 ];
 

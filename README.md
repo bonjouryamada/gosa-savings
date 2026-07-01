@@ -27,7 +27,7 @@ GitHubの公開リポジトリにこのフォルダの内容をアップロー�
 公開URLの例:
 
 ```text
-https://bonjouryamada.github.io/gosa-savings/?v=12
+https://bonjouryamada.github.io/gosa-savings/?v=13
 ```
 
 公開後はスマートフォンでURLを開き、`install.html` の手順に沿ってホーム画面に追加してください。
