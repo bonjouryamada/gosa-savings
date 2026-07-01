@@ -108,3 +108,17 @@ https://bonjouryamada.github.io/gosa-savings/?v=11
 - GitHubへのアップロードとGitHub Pages公開は未完了の外部作業として残す。
 - 公開後のPC、スマートフォン、ホーム画面追加済みPWAでの実機確認も未完了のまま残す。
 - v11では収益化を実装しない。将来の広告・応援プラン・プレミアム機能を検討する場合も、貯金金額、記録メモ、メールアドレス等を広告事業者または分析サービスへ送信しない。
+
+## v12 公開時の追加事項
+
+- v12は無料運用を優先し、Firebase同期を使わない端末内保存版として公開する。
+- `index.html` では `firebase-config.js` と `firebase-sync.js` を読み込まない。
+- マイページの表示は「設定・端末内保存」とし、メール登録・ログイン・クラウド同期ボタンは表示しない。
+- Service Workerのキャッシュ名は `gosa-savings-app-v12` を使用する。
+- 最新版確認URLは次を使用する。
+
+```text
+https://bonjouryamada.github.io/gosa-savings/?v=12
+```
+
+- Firebase関連ファイルは将来の同期機能再開用に残すが、v12のアプリ本体からは利用しない。

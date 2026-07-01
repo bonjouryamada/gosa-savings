@@ -755,6 +755,7 @@
   }
 
   function scheduleCloudSave() {
+    return;
     clearTimeout(cloudTimer);
     const user = window.GosaCloud?.currentUser();
     const lastSyncUid = localStorage.getItem(lastSyncUidKey);
@@ -850,14 +851,11 @@
   }
   function renderCloud(user, available) {
     const box = document.getElementById("v10-cloud");
-    if (!available) return box.innerHTML = "<p>クラウド同期は未設定です。FIREBASE_SETUP.md を確認してください。</p>";
-    box.innerHTML = user
-      ? `<strong>${escapeHtml(user.email || "")}</strong><div class="v10-actions"><button class="v7-primary" data-cloud="sync">今すぐ同期</button><button class="v7-small-button" data-cloud="out">ログアウト</button></div>`
-      : `<input id="v10-email" type="email" placeholder="メール"><input id="v10-pass" type="password" placeholder="パスワード"><div class="v10-actions"><button class="v7-primary" data-cloud="up">新規登録</button><button class="v7-primary" data-cloud="in">ログイン</button></div><button class="v7-small-button" data-cloud="reset">パスワード再設定</button>`;
+    box.innerHTML = `<p>現在は無料運用のため、記録はこの端末に保存されます。機種変更や別端末同期は、必要になったタイミングで追加できます。</p>`;
   }
   async function initV10() {
     const section = document.createElement("section");
-    section.className = "v7-form"; section.innerHTML = `<h2>設定・クラウド同期</h2><div class="v7-mode-row"><button class="v7-mode" data-setting-mode="normal">ノーマル</button><button class="v7-mode" data-setting-mode="strict">ストイック</button></div><div id="v10-cloud" class="v7-form"></div>`;
+    section.className = "v7-form"; section.innerHTML = `<h2>設定・端末内保存</h2><div class="v7-mode-row"><button class="v7-mode" data-setting-mode="normal">ノーマル</button><button class="v7-mode" data-setting-mode="strict">ストイック</button></div><div id="v10-cloud" class="v7-form"></div>`;
     document.getElementById("v7-profile").insertBefore(section, els.reset);
     const style = document.createElement("style"); style.textContent = `.v7-hero{display:flex;flex-direction:column}.v7-mascot,.v7-profile-hero img{display:block;width:min(100%,260px)!important;height:auto!important;max-width:100%;max-height:none;min-height:0;aspect-ratio:auto!important;object-fit:contain;margin:auto;background:transparent;padding:0}.v7-profile-hero{border:0!important;background:transparent!important;box-shadow:none!important;padding:8px 0!important}.v10-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}`; document.head.appendChild(style);
     section.addEventListener("click", async (event) => {
@@ -868,9 +866,7 @@
       } catch(error) { toast(GosaCloud.readableError(error)); }
     });
     applyMode();
-    if (!window.GosaCloud) return renderCloud(null, false);
-    await GosaCloud.ready; renderCloud(GosaCloud.currentUser(), GosaCloud.available);
-    GosaCloud.subscribeAuth((user) => { clearTimeout(cloudTimer); renderCloud(user, GosaCloud.available); if(user) migrateCloud(user).catch(()=>toast("同期失敗。端末データは保存済みです")); else cloudUid=null; });
+    renderCloud(null, false);
   }
 
   function today() {

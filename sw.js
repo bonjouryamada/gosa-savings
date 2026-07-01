@@ -1,11 +1,9 @@
-const CACHE_NAME = "gosa-savings-app-v11";
+const CACHE_NAME = "gosa-savings-app-v12";
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./app-v7.js",
-  "./firebase-config.js",
-  "./firebase-sync.js",
   "./growth-stages.js",
   "./manifest.webmanifest",
   "./install.html",
