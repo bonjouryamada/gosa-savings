@@ -39,13 +39,13 @@ https://bonjouryamada.github.io/gosa-savings/
 古いPWAキャッシュが残っていると、アップロード後も前の画面や白い画面が出ることがあります。その場合は、URLの最後に確認用の番号を付けて開きます。
 
 ```text
-https://bonjouryamada.github.io/gosa-savings/?v=13
+https://bonjouryamada.github.io/gosa-savings/
 ```
 
 今回はv13公開なので、確認URLは次を使います。
 
 ```text
-https://bonjouryamada.github.io/gosa-savings/?v=13
+https://bonjouryamada.github.io/gosa-savings/
 ```
 
 次の公開では、最後の数字を前回と違う番号にします。
@@ -54,7 +54,7 @@ https://bonjouryamada.github.io/gosa-savings/?v=13
 
 - PCではシークレットウィンドウで開く。
 - スマホでは別のブラウザで一度開く。
-- URLに `?v=13` を付けて開く。
+- 固定URL `https://bonjouryamada.github.io/gosa-savings/` を開く。
 - ブラウザのキャッシュを削除する。
 - ホーム画面に追加済みの古いPWAは、一度削除してから追加し直す。
 
@@ -94,7 +94,7 @@ https://bonjouryamada.github.io/gosa-savings/?v=13
 - マイページのカテゴリ一覧に例文が表示されない。
 - 成長段階が0円から1000万円まで切り替わり、キャラクター画像が潰れない。
 - manifest、Service Worker、アイコンが読み込まれている。
-- v13確認URL `https://bonjouryamada.github.io/gosa-savings/?v=13` で最新版が表示される。
+- 固定URL `https://bonjouryamada.github.io/gosa-savings/` で最新版が表示される。
 ## v11 公開時の追加事項
 
 - v11公開パッケージを使用し、パッケージ名にv11を明記する。
@@ -131,5 +131,5 @@ https://bonjouryamada.github.io/gosa-savings/?v=12
 - 最新版確認URLは次を使用する。
 
 ```text
-https://bonjouryamada.github.io/gosa-savings/?v=13
+https://bonjouryamada.github.io/gosa-savings/
 ```
